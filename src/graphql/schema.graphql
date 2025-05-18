@@ -1,0 +1,167 @@
+type User @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  email: String!
+  firstName: String!
+  lastName: String!
+  userType: UserType!
+  bio: String
+  profilePicture: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  videos: [Video] @hasMany
+  liveSessions: [LiveSession] @hasMany
+  purchases: [Purchase] @hasMany
+}
+
+enum UserType {
+  COACH
+  LEARNER
+  CHURCH
+}
+
+type Video @model @auth(rules: [
+  { allow: owner },
+  { allow: public, operations: [read] }
+]) {
+  id: ID!
+  title: String!
+  description: String
+  videoUrl: String!
+  thumbnailUrl: String
+  duration: String
+  isPaid: Boolean!
+  price: Float
+  views: Int!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: User @belongsTo
+  engagements: [VideoEngagement] @hasMany
+  purchases: [Purchase] @hasMany
+}
+
+type LiveSession @model @auth(rules: [
+  { allow: owner },
+  { allow: public, operations: [read] }
+]) {
+  id: ID!
+  title: String!
+  description: String
+  date: AWSDate!
+  time: AWSTime!
+  platform: PlatformType!
+  meetingLink: String!
+  isPaid: Boolean!
+  price: Float
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: User @belongsTo
+  attendees: [SessionAttendee] @hasMany
+  purchases: [Purchase] @hasMany
+}
+
+enum PlatformType {
+  ZOOM
+  GOOGLE_MEET
+}
+
+type Purchase @model @auth(rules: [
+  { allow: owner },
+  { allow: private, operations: [read] }
+]) {
+  id: ID!
+  transactionId: String!
+  amount: Float!
+  currency: String!
+  status: PurchaseStatus!
+  paymentMethod: String!
+  phoneNumber: String
+  purchaseDate: AWSDateTime!
+  user: User @belongsTo
+  video: Video @belongsTo
+  liveSession: LiveSession @belongsTo
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+type VideoEngagement @model @auth(rules: [
+  { allow: owner },
+  { allow: private, operations: [read] }
+]) {
+  id: ID!
+  videoId: ID!
+  userId: ID!
+  watchedDuration: Int!
+  watchedPercentage: Float!
+  completed: Boolean!
+  lastWatchedAt: AWSDateTime!
+  video: Video @belongsTo
+  user: User @belongsTo
+}
+
+type SessionAttendee @model @auth(rules: [
+  { allow: owner },
+  { allow: private, operations: [read] }
+]) {
+  id: ID!
+  sessionId: ID!
+  userId: ID!
+  joinTime: AWSDateTime
+  leaveTime: AWSDateTime
+  duration: Int
+  session: LiveSession @belongsTo
+  user: User @belongsTo
+}
+
+# Queries
+type Query {
+  getVideosByOwner(ownerId: ID!): [Video]
+  getLiveSessionsByOwner(ownerId: ID!): [LiveSession]
+  getVideoEngagementStats(videoId: ID!): VideoEngagementStats
+  getSessionAttendanceStats(sessionId: ID!): SessionAttendanceStats
+  getUserPurchases(userId: ID!): [Purchase]
+}
+
+type VideoEngagementStats {
+  videoId: ID!
+  totalViews: Int!
+  uniqueViewers: Int!
+  averageWatchPercentage: Float!
+  completionRate: Float!
+}
+
+type SessionAttendanceStats {
+  sessionId: ID!
+  totalAttendees: Int!
+  averageDuration: Int!
+}
+
+# Mutations
+type Mutation {
+  processPayment(input: PaymentInput!): Purchase
+  recordVideoEngagement(input: VideoEngagementInput!): VideoEngagement
+  recordSessionAttendance(input: SessionAttendanceInput!): SessionAttendee
+}
+
+input PaymentInput {
+  videoId: ID
+  sessionId: ID
+  amount: Float!
+  phoneNumber: String!
+}
+
+input VideoEngagementInput {
+  videoId: ID!
+  watchedDuration: Int!
+  watchedPercentage: Float!
+  completed: Boolean!
+}
+
+input SessionAttendanceInput {
+  sessionId: ID!
+  joinTime: AWSDateTime!
+  leaveTime: AWSDateTime
+}
