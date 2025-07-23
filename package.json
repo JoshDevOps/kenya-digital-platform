@@ -21,7 +21,9 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4",
     "aws-amplify": "^5.0.0",
-    "react-player": "^2.10.1"
+    "react-player": "^2.10.1",
+    "bootstrap": "^5.2.0",
+    "react-bootstrap": "^2.5.0"
   },
   "eslintConfig": {
     "extends": [
