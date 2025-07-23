@@ -28,14 +28,14 @@ export class PipelineStack extends cdk.Stack {
         phases: {
           pre_build: {
             commands: [
-              'echo Logging in to Amazon ECR...',
+              'echo Installing dependencies...',
               'npm install',
             ],
           },
           build: {
             commands: [
               'echo Build started on `date`',
-              'npm run build',
+              'CI=false npm run build',
             ],
           },
           post_build: {
