@@ -1,17 +1,17 @@
-// AWS Configuration - Update these values after deploying infrastructure
+// AWS Configuration - Using deployed infrastructure values
 const awsconfig = {
-  aws_project_region: process.env.REACT_APP_AWS_REGION || 'us-east-1',
-  aws_cognito_region: process.env.REACT_APP_AWS_REGION || 'us-east-1',
-  aws_user_pools_id: process.env.REACT_APP_USER_POOL_ID,
-  aws_user_pools_web_client_id: process.env.REACT_APP_USER_POOL_CLIENT_ID,
-  aws_cognito_identity_pool_id: process.env.REACT_APP_IDENTITY_POOL_ID,
-  aws_appsync_graphqlEndpoint: process.env.REACT_APP_GRAPHQL_ENDPOINT,
-  aws_appsync_region: process.env.REACT_APP_AWS_REGION || 'us-east-1',
+  aws_project_region: 'us-east-1',
+  aws_cognito_region: 'us-east-1',
+  aws_user_pools_id: 'us-east-1_1qJTCqbTv',
+  aws_user_pools_web_client_id: '2h3msj6045tnruecqt7ll708r7',
+  aws_cognito_identity_pool_id: 'us-east-1:0e2c09d2-db1d-46f8-a4f2-114e29e7f1ff',
+  aws_appsync_graphqlEndpoint: 'https://vg35uu4gbbbnnaf6dy7shanhwm.appsync-api.us-east-1.amazonaws.com/graphql',
+  aws_appsync_region: 'us-east-1',
   aws_appsync_authenticationType: 'AMAZON_COGNITO_USER_POOLS',
   Storage: {
     AWSS3: {
-      bucket: process.env.REACT_APP_UPLOADS_BUCKET,
-      region: process.env.REACT_APP_AWS_REGION || 'us-east-1',
+      bucket: 'skillbridge-uploads-637423178245',
+      region: 'us-east-1',
     }
   }
 };
