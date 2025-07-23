@@ -27,7 +27,11 @@
     "lucide-react": "^0.263.1",
     "react-icons": "^4.10.1",
     "react-hot-toast": "^2.4.1",
-    "react-hot-toast": "^2.4.1"
+    "framer-motion": "^10.16.4",
+    "recharts": "^2.8.0",
+    "date-fns": "^2.30.0",
+    "clsx": "^2.0.0",
+    "class-variance-authority": "^0.7.0"
   },
   "eslintConfig": {
     "extends": [
