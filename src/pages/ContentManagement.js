@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Plus, Search, Filter, Edit, Trash2, Eye, Play, DollarSign, Users, Calendar, MoreVertical, Wand2 } from 'lucide-react';
-import QuickCourseCreator from '../components/QuickCourseCreator';
+import CourseCreator from '../components/CourseCreator';
+import { CourseService } from '../services/courseService';
+import { useAuth } from '../contexts/AuthContext';
 
 const ContentManagement = () => {
   const [courses, setCourses] = useState([
@@ -354,11 +356,12 @@ const ContentManagement = () => {
           </div>
         )}
 
-        <QuickCourseCreator 
-          show={showCreateModal}
-          onClose={() => setShowCreateModal(false)}
-          onSave={handleSaveCourse}
-        />
+        {showCreateModal && (
+          <CourseCreator 
+            onClose={() => setShowCreateModal(false)}
+            onCourseCreated={handleSaveCourse}
+          />
+        )}
 
         {/* Quick AI Access */}
         <div className="fixed right-4 bottom-4 z-40">

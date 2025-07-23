@@ -3,6 +3,7 @@ import { useAuth } from './AuthContext';
 import { API, graphqlOperation } from 'aws-amplify';
 import { LIST_COURSES, GET_USER_ENROLLMENTS } from '../graphql/queries';
 import { sampleCourses, sampleEnrollments } from '../services/sampleData';
+import { CourseService } from '../services/courseService';
 
 // Create the course context
 const CourseContext = createContext();
@@ -34,31 +35,27 @@ export const CourseProvider = ({ children }) => {
       setLoading(true);
       let userCourses = [];
       
-      // Try to fetch from AWS GraphQL API
-      try {
-        if (userAttributes && userAttributes['custom:user_type'] === 'COACH') {
-          // Fetch all courses for coaches (they can see all)
-          const result = await API.graphql(graphqlOperation(LIST_COURSES, { limit: 50 }));
-          userCourses = result.data.listCourses.items || [];
-        } else {
-          // For learners, fetch enrolled courses
-          const result = await API.graphql(graphqlOperation(GET_USER_ENROLLMENTS, { 
-            userId: currentUser.username 
-          }));
-          userCourses = result.data.getUserEnrollments?.map(enrollment => enrollment.course) || [];
-        }
-      } catch (apiError) {
-        console.log('Using sample data - GraphQL API not ready:', apiError.message);
-        // Fallback to sample data
-        if (userAttributes && userAttributes['custom:user_type'] === 'COACH') {
-          userCourses = sampleCourses;
-        } else {
-          // For learners, show enrolled courses from sample data
-          const userEnrollments = sampleEnrollments.filter(e => e.userId === 'current-user');
-          userCourses = userEnrollments.map(enrollment => 
-            sampleCourses.find(course => course.id === enrollment.courseId)
-          ).filter(Boolean);
-        }
+      // Use CourseService with fallback to sample data
+      if (userAttributes && userAttributes['custom:user_type'] === 'COACH') {
+        // Coaches see all courses (their own + sample data)
+        const instructorCourses = await CourseService.getCoursesByInstructor(currentUser.username);
+        userCourses = [...instructorCourses, ...sampleCourses];
+      } else {
+        // Learners see enrolled courses
+        const enrollments = await CourseService.getUserEnrollments(currentUser.username);
+        const allCourses = [...await CourseService.getAllCourses(), ...sampleCourses];
+        
+        userCourses = enrollments.map(enrollment => 
+          allCourses.find(course => course.id === enrollment.courseId)
+        ).filter(Boolean);
+        
+        // Add sample enrolled courses for demo
+        const sampleEnrolled = sampleEnrollments
+          .filter(e => e.userId === 'current-user')
+          .map(enrollment => sampleCourses.find(course => course.id === enrollment.courseId))
+          .filter(Boolean);
+        
+        userCourses = [...userCourses, ...sampleEnrolled];
       }
       
       setCourses(userCourses);
