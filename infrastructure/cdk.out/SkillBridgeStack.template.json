@@ -1,0 +1,984 @@
+{
+ "Resources": {
+  "WebsiteBucket75C24D94": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketName": "skillbridge-web-637423178245",
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "IgnorePublicAcls": true
+    },
+    "WebsiteConfiguration": {
+     "ErrorDocument": "error.html",
+     "IndexDocument": "index.html"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/WebsiteBucket/Resource"
+   }
+  },
+  "WebsiteBucketPolicyE10E3262": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "WebsiteBucket75C24D94"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:GetObject",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "WebsiteBucket75C24D94",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/WebsiteBucket/Policy/Resource"
+   }
+  },
+  "UploadsBucket5E5E9B64": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketName": "skillbridge-uploads-637423178245",
+    "CorsConfiguration": {
+     "CorsRules": [
+      {
+       "AllowedHeaders": [
+        "*"
+       ],
+       "AllowedMethods": [
+        "GET",
+        "POST",
+        "PUT"
+       ],
+       "AllowedOrigins": [
+        "*"
+       ]
+      }
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/UploadsBucket/Resource"
+   }
+  },
+  "Distribution830FAC52": {
+   "Type": "AWS::CloudFront::Distribution",
+   "Properties": {
+    "DistributionConfig": {
+     "CustomErrorResponses": [
+      {
+       "ErrorCode": 404,
+       "ResponseCode": 200,
+       "ResponsePagePath": "/index.html"
+      }
+     ],
+     "DefaultCacheBehavior": {
+      "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+      "Compress": true,
+      "TargetOriginId": "SkillBridgeStackDistributionOrigin117485A88",
+      "ViewerProtocolPolicy": "redirect-to-https"
+     },
+     "DefaultRootObject": "index.html",
+     "Enabled": true,
+     "HttpVersion": "http2",
+     "IPV6Enabled": true,
+     "Origins": [
+      {
+       "CustomOriginConfig": {
+        "OriginProtocolPolicy": "http-only",
+        "OriginSSLProtocols": [
+         "TLSv1.2"
+        ]
+       },
+       "DomainName": {
+        "Fn::Select": [
+         2,
+         {
+          "Fn::Split": [
+           "/",
+           {
+            "Fn::GetAtt": [
+             "WebsiteBucket75C24D94",
+             "WebsiteURL"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "Id": "SkillBridgeStackDistributionOrigin117485A88"
+      }
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/Distribution/Resource"
+   }
+  },
+  "UserPool6BA7E5F2": {
+   "Type": "AWS::Cognito::UserPool",
+   "Properties": {
+    "AccountRecoverySetting": {
+     "RecoveryMechanisms": [
+      {
+       "Name": "verified_email",
+       "Priority": 1
+      }
+     ]
+    },
+    "AdminCreateUserConfig": {
+     "AllowAdminCreateUserOnly": false
+    },
+    "AutoVerifiedAttributes": [
+     "email"
+    ],
+    "EmailVerificationMessage": "The verification code to your new account is {####}",
+    "EmailVerificationSubject": "Verify your new account",
+    "Policies": {
+     "PasswordPolicy": {
+      "MinimumLength": 8,
+      "RequireLowercase": true,
+      "RequireNumbers": true,
+      "RequireSymbols": true,
+      "RequireUppercase": true
+     }
+    },
+    "Schema": [
+     {
+      "Mutable": true,
+      "Name": "email",
+      "Required": true
+     },
+     {
+      "Mutable": true,
+      "Name": "given_name",
+      "Required": true
+     },
+     {
+      "Mutable": true,
+      "Name": "family_name",
+      "Required": true
+     },
+     {
+      "AttributeDataType": "String",
+      "Mutable": true,
+      "Name": "user_type"
+     }
+    ],
+    "SmsVerificationMessage": "The verification code to your new account is {####}",
+    "UsernameAttributes": [
+     "email"
+    ],
+    "UserPoolName": "skillbridge-users",
+    "VerificationMessageTemplate": {
+     "DefaultEmailOption": "CONFIRM_WITH_CODE",
+     "EmailMessage": "The verification code to your new account is {####}",
+     "EmailSubject": "Verify your new account",
+     "SmsMessage": "The verification code to your new account is {####}"
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/UserPool/Resource"
+   }
+  },
+  "UserPoolClient2F5918F7": {
+   "Type": "AWS::Cognito::UserPoolClient",
+   "Properties": {
+    "UserPoolId": {
+     "Ref": "UserPool6BA7E5F2"
+    },
+    "AllowedOAuthFlows": [
+     "implicit",
+     "code"
+    ],
+    "AllowedOAuthFlowsUserPoolClient": true,
+    "AllowedOAuthScopes": [
+     "profile",
+     "phone",
+     "email",
+     "openid",
+     "aws.cognito.signin.user.admin"
+    ],
+    "CallbackURLs": [
+     "https://example.com"
+    ],
+    "ExplicitAuthFlows": [
+     "ALLOW_ADMIN_USER_PASSWORD_AUTH",
+     "ALLOW_CUSTOM_AUTH",
+     "ALLOW_USER_SRP_AUTH",
+     "ALLOW_REFRESH_TOKEN_AUTH"
+    ],
+    "SupportedIdentityProviders": [
+     "COGNITO"
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/UserPoolClient/Resource"
+   }
+  },
+  "IdentityPool": {
+   "Type": "AWS::Cognito::IdentityPool",
+   "Properties": {
+    "AllowUnauthenticatedIdentities": false,
+    "CognitoIdentityProviders": [
+     {
+      "ClientId": {
+       "Ref": "UserPoolClient2F5918F7"
+      },
+      "ProviderName": {
+       "Fn::GetAtt": [
+        "UserPool6BA7E5F2",
+        "ProviderName"
+       ]
+      }
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/IdentityPool"
+   }
+  },
+  "UsersTable9725E9C8": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "KeySchema": [
+     {
+      "AttributeName": "id",
+      "KeyType": "HASH"
+     }
+    ],
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "id",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "TableName": "skillbridge-users"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/UsersTable/Resource"
+   }
+  },
+  "CoursesTable3F79D98E": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "KeySchema": [
+     {
+      "AttributeName": "id",
+      "KeyType": "HASH"
+     }
+    ],
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "id",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "TableName": "skillbridge-courses"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/CoursesTable/Resource"
+   }
+  },
+  "EnrollmentsTableE11B64C8": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "KeySchema": [
+     {
+      "AttributeName": "id",
+      "KeyType": "HASH"
+     }
+    ],
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "id",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "userId",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "courseId",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "GlobalSecondaryIndexes": [
+     {
+      "IndexName": "user-course-index",
+      "KeySchema": [
+       {
+        "AttributeName": "userId",
+        "KeyType": "HASH"
+       },
+       {
+        "AttributeName": "courseId",
+        "KeyType": "RANGE"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     }
+    ],
+    "TableName": "skillbridge-enrollments"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/EnrollmentsTable/Resource"
+   }
+  },
+  "SessionsTable7C302024": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "KeySchema": [
+     {
+      "AttributeName": "id",
+      "KeyType": "HASH"
+     }
+    ],
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "id",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "TableName": "skillbridge-sessions"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/SessionsTable/Resource"
+   }
+  },
+  "ApiF70053CD": {
+   "Type": "AWS::AppSync::GraphQLApi",
+   "Properties": {
+    "AuthenticationType": "AMAZON_COGNITO_USER_POOLS",
+    "Name": "skillbridge-api",
+    "UserPoolConfig": {
+     "AwsRegion": "us-east-1",
+     "DefaultAction": "ALLOW",
+     "UserPoolId": {
+      "Ref": "UserPool6BA7E5F2"
+     }
+    },
+    "XrayEnabled": true
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/Api/Resource"
+   }
+  },
+  "ApiSchema510EECD7": {
+   "Type": "AWS::AppSync::GraphQLSchema",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "Definition": "type User @aws_cognito_user_pools {\n  id: ID!\n  email: String!\n  firstName: String!\n  lastName: String!\n  userType: UserType!\n  createdAt: AWSDateTime!\n  updatedAt: AWSDateTime!\n}\n\ntype Course @aws_cognito_user_pools {\n  id: ID!\n  title: String!\n  description: String!\n  instructorId: ID!\n  instructor: User\n  price: Float!\n  duration: Int!\n  level: CourseLevel!\n  category: String!\n  thumbnail: String\n  videoUrl: String\n  materials: [String]\n  enrollmentCount: Int!\n  rating: Float\n  isPublished: Boolean!\n  createdAt: AWSDateTime!\n  updatedAt: AWSDateTime!\n}\n\ntype Enrollment @aws_cognito_user_pools {\n  id: ID!\n  userId: ID!\n  courseId: ID!\n  user: User\n  course: Course\n  progress: Float!\n  completedLessons: [String]\n  enrolledAt: AWSDateTime!\n  completedAt: AWSDateTime\n}\n\ntype Session @aws_cognito_user_pools {\n  id: ID!\n  courseId: ID!\n  title: String!\n  description: String\n  scheduledAt: AWSDateTime!\n  duration: Int!\n  meetingUrl: String\n  isLive: Boolean!\n  attendees: [ID]\n  createdAt: AWSDateTime!\n}\n\nenum UserType {\n  LEARNER\n  COACH\n  ADMIN\n}\n\nenum CourseLevel {\n  BEGINNER\n  INTERMEDIATE\n  ADVANCED\n}\n\ninput CreateCourseInput {\n  title: String!\n  description: String!\n  price: Float!\n  duration: Int!\n  level: CourseLevel!\n  category: String!\n  thumbnail: String\n  videoUrl: String\n  materials: [String]\n}\n\ninput UpdateCourseInput {\n  id: ID!\n  title: String\n  description: String\n  price: Float\n  duration: Int\n  level: CourseLevel\n  category: String\n  thumbnail: String\n  videoUrl: String\n  materials: [String]\n  isPublished: Boolean\n}\n\ninput CreateSessionInput {\n  courseId: ID!\n  title: String!\n  description: String\n  scheduledAt: AWSDateTime!\n  duration: Int!\n}\n\ntype Query {\n  getUser(id: ID!): User\n  listCourses(limit: Int, nextToken: String): CourseConnection\n  getCourse(id: ID!): Course\n  getUserEnrollments(userId: ID!): [Enrollment]\n  getCourseEnrollments(courseId: ID!): [Enrollment]\n  listSessions(courseId: ID): [Session]\n  getSession(id: ID!): Session\n}\n\ntype Mutation {\n  createCourse(input: CreateCourseInput!): Course\n  updateCourse(input: UpdateCourseInput!): Course\n  deleteCourse(id: ID!): Course\n  enrollInCourse(courseId: ID!): Enrollment\n  updateProgress(enrollmentId: ID!, progress: Float!, completedLessons: [String]): Enrollment\n  createSession(input: CreateSessionInput!): Session\n  joinSession(sessionId: ID!): Session\n}\n\ntype Subscription {\n  onSessionUpdate(sessionId: ID!): Session\n    @aws_subscribe(mutations: [\"joinSession\"])\n}\n\ntype CourseConnection {\n  items: [Course]\n  nextToken: String\n}"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/Api/Schema"
+   }
+  },
+  "ApiUsersDataSourceServiceRoleF3445103": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/Api/UsersDataSource/ServiceRole/Resource"
+   }
+  },
+  "ApiUsersDataSourceServiceRoleDefaultPolicy68FCF2AF": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ApiUsersDataSourceServiceRoleDefaultPolicy68FCF2AF",
+    "Roles": [
+     {
+      "Ref": "ApiUsersDataSourceServiceRoleF3445103"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/Api/UsersDataSource/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ApiUsersDataSource5D3DC4F9": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "Name": "UsersDataSource",
+    "Type": "AMAZON_DYNAMODB",
+    "DynamoDBConfig": {
+     "AwsRegion": "us-east-1",
+     "TableName": {
+      "Ref": "UsersTable9725E9C8"
+     }
+    },
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "ApiUsersDataSourceServiceRoleF3445103",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/Api/UsersDataSource/Resource"
+   }
+  },
+  "ApiCoursesDataSourceServiceRoleFBE63203": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/Api/CoursesDataSource/ServiceRole/Resource"
+   }
+  },
+  "ApiCoursesDataSourceServiceRoleDefaultPolicy7095DACB": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CoursesTable3F79D98E",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ApiCoursesDataSourceServiceRoleDefaultPolicy7095DACB",
+    "Roles": [
+     {
+      "Ref": "ApiCoursesDataSourceServiceRoleFBE63203"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/Api/CoursesDataSource/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ApiCoursesDataSource09E7D29C": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "Name": "CoursesDataSource",
+    "Type": "AMAZON_DYNAMODB",
+    "DynamoDBConfig": {
+     "AwsRegion": "us-east-1",
+     "TableName": {
+      "Ref": "CoursesTable3F79D98E"
+     }
+    },
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "ApiCoursesDataSourceServiceRoleFBE63203",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/Api/CoursesDataSource/Resource"
+   }
+  },
+  "ApiEnrollmentsDataSourceServiceRole764E0CF9": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/Api/EnrollmentsDataSource/ServiceRole/Resource"
+   }
+  },
+  "ApiEnrollmentsDataSourceServiceRoleDefaultPolicyCA8E9E79": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "EnrollmentsTableE11B64C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "EnrollmentsTableE11B64C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ApiEnrollmentsDataSourceServiceRoleDefaultPolicyCA8E9E79",
+    "Roles": [
+     {
+      "Ref": "ApiEnrollmentsDataSourceServiceRole764E0CF9"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/Api/EnrollmentsDataSource/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ApiEnrollmentsDataSource28DAF598": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "Name": "EnrollmentsDataSource",
+    "Type": "AMAZON_DYNAMODB",
+    "DynamoDBConfig": {
+     "AwsRegion": "us-east-1",
+     "TableName": {
+      "Ref": "EnrollmentsTableE11B64C8"
+     }
+    },
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "ApiEnrollmentsDataSourceServiceRole764E0CF9",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/Api/EnrollmentsDataSource/Resource"
+   }
+  },
+  "ApiSessionsDataSourceServiceRole6AD100D9": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/Api/SessionsDataSource/ServiceRole/Resource"
+   }
+  },
+  "ApiSessionsDataSourceServiceRoleDefaultPolicy54A46212": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "SessionsTable7C302024",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ApiSessionsDataSourceServiceRoleDefaultPolicy54A46212",
+    "Roles": [
+     {
+      "Ref": "ApiSessionsDataSourceServiceRole6AD100D9"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/Api/SessionsDataSource/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ApiSessionsDataSource35C7A391": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "Name": "SessionsDataSource",
+    "Type": "AMAZON_DYNAMODB",
+    "DynamoDBConfig": {
+     "AwsRegion": "us-east-1",
+     "TableName": {
+      "Ref": "SessionsTable7C302024"
+     }
+    },
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "ApiSessionsDataSourceServiceRole6AD100D9",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/Api/SessionsDataSource/Resource"
+   }
+  },
+  "CognitoDefaultAuthenticatedRoleC5D5C31E": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Condition": {
+        "StringEquals": {
+         "cognito-identity.amazonaws.com:aud": {
+          "Ref": "IdentityPool"
+         }
+        },
+        "ForAnyValue:StringLike": {
+         "cognito-identity.amazonaws.com:amr": "authenticated"
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Federated": "cognito-identity.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/CognitoDefaultAuthenticatedRole/Resource"
+   }
+  },
+  "CognitoDefaultAuthenticatedRoleDefaultPolicy4C5EB799": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:DeleteObject",
+        "s3:GetObject",
+        "s3:PutObject"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "UploadsBucket5E5E9B64",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CognitoDefaultAuthenticatedRoleDefaultPolicy4C5EB799",
+    "Roles": [
+     {
+      "Ref": "CognitoDefaultAuthenticatedRoleC5D5C31E"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/CognitoDefaultAuthenticatedRole/DefaultPolicy/Resource"
+   }
+  },
+  "IdentityPoolRoleAttachment": {
+   "Type": "AWS::Cognito::IdentityPoolRoleAttachment",
+   "Properties": {
+    "IdentityPoolId": {
+     "Ref": "IdentityPool"
+    },
+    "Roles": {
+     "authenticated": {
+      "Fn::GetAtt": [
+       "CognitoDefaultAuthenticatedRoleC5D5C31E",
+       "Arn"
+      ]
+     }
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/IdentityPoolRoleAttachment"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1VQX0+DMBD/LHsv54YP+jpHYkxMnKDPppRObpQW6dWFNP3upjAGPv3+3qW9FB4fYLvhF5uIqkkUluAL4qJh/GK/vL0H/+REI4kdTvrKJjgahWJY7EkHJpRx1ak3msBnaKnH0hEaHZtrHZgw3xrJgP+0sj8ao2LlxmdyUCg1raPFeamkJqRhHl7r3Ci5J+KibqWmwKpB89ZUJfgPXioZ6yMJjHedHbQA/9zzrv5R+w5jOqr31/+qELVsOcvGZVmZceKFcb0Y9y0qMOQt+PiGGIy4HOx6qsByaW/Db446N/5qdgPTppJwtne/aQq7HWw3Z4uY9E4TthLyCf8A7xh1sMMBAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgeStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "WebsiteURL": {
+   "Description": "Website URL",
+   "Value": {
+    "Fn::GetAtt": [
+     "Distribution830FAC52",
+     "DomainName"
+    ]
+   }
+  },
+  "GraphQLAPIURL": {
+   "Description": "GraphQL API URL",
+   "Value": {
+    "Fn::GetAtt": [
+     "ApiF70053CD",
+     "GraphQLUrl"
+    ]
+   }
+  },
+  "UserPoolId": {
+   "Description": "Cognito User Pool ID",
+   "Value": {
+    "Ref": "UserPool6BA7E5F2"
+   }
+  },
+  "UserPoolClientId": {
+   "Description": "Cognito User Pool Client ID",
+   "Value": {
+    "Ref": "UserPoolClient2F5918F7"
+   }
+  },
+  "IdentityPoolId": {
+   "Description": "Cognito Identity Pool ID",
+   "Value": {
+    "Ref": "IdentityPool"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

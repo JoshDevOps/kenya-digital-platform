@@ -1,0 +1,20 @@
+{
+  "version": "32.0.0",
+  "files": {
+    "b34abaabe2228e18cf9aada35d0ff7ebcbc2de19e2065ce72b55fde74eabbe29": {
+      "source": {
+        "path": "SkillBridgeStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "637423178245-us-east-1": {
+          "bucketName": "cdk-hnb659fds-assets-637423178245-us-east-1",
+          "objectKey": "b34abaabe2228e18cf9aada35d0ff7ebcbc2de19e2065ce72b55fde74eabbe29.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::637423178245:role/cdk-hnb659fds-file-publishing-role-637423178245-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

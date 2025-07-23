@@ -32,12 +32,8 @@ export const AuthProvider = ({ children }) => {
           email,
           given_name: firstName,
           family_name: lastName,
-          // Explicitly specify the custom:user_type as a string attribute
+          name: `${firstName} ${lastName}`,
           'custom:user_type': userType.toString(),
-        },
-        clientMetadata: {
-          // Add client metadata to help with attribute type determination
-          'custom:user_type': 'String'
         }
       });
       return user;
@@ -68,6 +64,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const user = await Auth.signIn(usernameOrEmail, password);
       setCurrentUser(user);
+      await getUserAttributes(user);
       return user;
     } catch (error) {
       setError(error.message);

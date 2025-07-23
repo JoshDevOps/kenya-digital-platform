@@ -1,0 +1,425 @@
+{
+  "version": "32.0.0",
+  "artifacts": {
+    "SkillBridgeStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "SkillBridgeStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "SkillBridgeStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://637423178245/us-east-1",
+      "properties": {
+        "templateFile": "SkillBridgeStack.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::637423178245:role/cdk-hnb659fds-deploy-role-637423178245-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::637423178245:role/cdk-hnb659fds-cfn-exec-role-637423178245-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-637423178245-us-east-1/b34abaabe2228e18cf9aada35d0ff7ebcbc2de19e2065ce72b55fde74eabbe29.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "SkillBridgeStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::637423178245:role/cdk-hnb659fds-lookup-role-637423178245-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "SkillBridgeStack.assets"
+      ],
+      "metadata": {
+        "/SkillBridgeStack/WebsiteBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "WebsiteBucket75C24D94"
+          }
+        ],
+        "/SkillBridgeStack/WebsiteBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "WebsiteBucketPolicyE10E3262"
+          }
+        ],
+        "/SkillBridgeStack/UploadsBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UploadsBucket5E5E9B64"
+          }
+        ],
+        "/SkillBridgeStack/Distribution/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Distribution830FAC52"
+          }
+        ],
+        "/SkillBridgeStack/UserPool/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UserPool6BA7E5F2"
+          }
+        ],
+        "/SkillBridgeStack/UserPoolClient/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UserPoolClient2F5918F7"
+          }
+        ],
+        "/SkillBridgeStack/IdentityPool": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IdentityPool"
+          }
+        ],
+        "/SkillBridgeStack/UsersTable": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "UsersTable9725E9C8"
+            }
+          }
+        ],
+        "/SkillBridgeStack/UsersTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsersTable9725E9C8"
+          }
+        ],
+        "/SkillBridgeStack/CoursesTable": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "CoursesTable3F79D98E"
+            }
+          }
+        ],
+        "/SkillBridgeStack/CoursesTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CoursesTable3F79D98E"
+          }
+        ],
+        "/SkillBridgeStack/EnrollmentsTable": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "EnrollmentsTableE11B64C8"
+            }
+          }
+        ],
+        "/SkillBridgeStack/EnrollmentsTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EnrollmentsTableE11B64C8"
+          }
+        ],
+        "/SkillBridgeStack/SessionsTable": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "SessionsTable7C302024"
+            }
+          }
+        ],
+        "/SkillBridgeStack/SessionsTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SessionsTable7C302024"
+          }
+        ],
+        "/SkillBridgeStack/Api/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiF70053CD"
+          }
+        ],
+        "/SkillBridgeStack/Api/Schema": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiSchema510EECD7"
+          }
+        ],
+        "/SkillBridgeStack/Api/UsersDataSource/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiUsersDataSourceServiceRoleF3445103"
+          }
+        ],
+        "/SkillBridgeStack/Api/UsersDataSource/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiUsersDataSourceServiceRoleDefaultPolicy68FCF2AF"
+          }
+        ],
+        "/SkillBridgeStack/Api/UsersDataSource/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiUsersDataSource5D3DC4F9"
+          }
+        ],
+        "/SkillBridgeStack/Api/CoursesDataSource/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiCoursesDataSourceServiceRoleFBE63203"
+          }
+        ],
+        "/SkillBridgeStack/Api/CoursesDataSource/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiCoursesDataSourceServiceRoleDefaultPolicy7095DACB"
+          }
+        ],
+        "/SkillBridgeStack/Api/CoursesDataSource/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiCoursesDataSource09E7D29C"
+          }
+        ],
+        "/SkillBridgeStack/Api/EnrollmentsDataSource/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiEnrollmentsDataSourceServiceRole764E0CF9"
+          }
+        ],
+        "/SkillBridgeStack/Api/EnrollmentsDataSource/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiEnrollmentsDataSourceServiceRoleDefaultPolicyCA8E9E79"
+          }
+        ],
+        "/SkillBridgeStack/Api/EnrollmentsDataSource/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiEnrollmentsDataSource28DAF598"
+          }
+        ],
+        "/SkillBridgeStack/Api/SessionsDataSource/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiSessionsDataSourceServiceRole6AD100D9"
+          }
+        ],
+        "/SkillBridgeStack/Api/SessionsDataSource/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiSessionsDataSourceServiceRoleDefaultPolicy54A46212"
+          }
+        ],
+        "/SkillBridgeStack/Api/SessionsDataSource/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiSessionsDataSource35C7A391"
+          }
+        ],
+        "/SkillBridgeStack/CognitoDefaultAuthenticatedRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CognitoDefaultAuthenticatedRoleC5D5C31E"
+          }
+        ],
+        "/SkillBridgeStack/CognitoDefaultAuthenticatedRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CognitoDefaultAuthenticatedRoleDefaultPolicy4C5EB799"
+          }
+        ],
+        "/SkillBridgeStack/IdentityPoolRoleAttachment": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IdentityPoolRoleAttachment"
+          }
+        ],
+        "/SkillBridgeStack/WebsiteURL": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "WebsiteURL"
+          }
+        ],
+        "/SkillBridgeStack/GraphQLAPIURL": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GraphQLAPIURL"
+          }
+        ],
+        "/SkillBridgeStack/UserPoolId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UserPoolId"
+          }
+        ],
+        "/SkillBridgeStack/UserPoolClientId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UserPoolClientId"
+          }
+        ],
+        "/SkillBridgeStack/IdentityPoolId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "IdentityPoolId"
+          }
+        ],
+        "/SkillBridgeStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/SkillBridgeStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/SkillBridgeStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "SkillBridgeStack"
+    },
+    "SkillBridgePipelineStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "SkillBridgePipelineStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "SkillBridgePipelineStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://637423178245/us-east-1",
+      "properties": {
+        "templateFile": "SkillBridgePipelineStack.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::637423178245:role/cdk-hnb659fds-deploy-role-637423178245-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::637423178245:role/cdk-hnb659fds-cfn-exec-role-637423178245-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-637423178245-us-east-1/4976f6399f4b19f2f7e1255213b53330dc51b6658274b1eddefa8713255da3b1.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "SkillBridgePipelineStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::637423178245:role/cdk-hnb659fds-lookup-role-637423178245-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "SkillBridgePipelineStack.assets"
+      ],
+      "metadata": {
+        "/SkillBridgePipelineStack/ArtifactsBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ArtifactsBucket2AAC5544"
+          }
+        ],
+        "/SkillBridgePipelineStack/BuildProject/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BuildProjectRoleAA92C755"
+          }
+        ],
+        "/SkillBridgePipelineStack/BuildProject/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BuildProjectRoleDefaultPolicy3E9F248C"
+          }
+        ],
+        "/SkillBridgePipelineStack/BuildProject/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BuildProject097C5DB7"
+          }
+        ],
+        "/SkillBridgePipelineStack/Pipeline/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineRoleD68726F7"
+          }
+        ],
+        "/SkillBridgePipelineStack/Pipeline/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineRoleDefaultPolicyC7A05455"
+          }
+        ],
+        "/SkillBridgePipelineStack/Pipeline/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineC660917D"
+          }
+        ],
+        "/SkillBridgePipelineStack/Pipeline/Source/GitHub_Source/WebhookResource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineSourceGitHubSourceWebhookResource8EECEFFF"
+          }
+        ],
+        "/SkillBridgePipelineStack/Pipeline/Build/CodeBuild/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineBuildCodeBuildCodePipelineActionRoleEE1A2CE7"
+          }
+        ],
+        "/SkillBridgePipelineStack/Pipeline/Build/CodeBuild/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineBuildCodeBuildCodePipelineActionRoleDefaultPolicyD9C4A2F6"
+          }
+        ],
+        "/SkillBridgePipelineStack/Pipeline/Deploy/S3Deploy/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineDeployS3DeployCodePipelineActionRole90584DAF"
+          }
+        ],
+        "/SkillBridgePipelineStack/Pipeline/Deploy/S3Deploy/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineDeployS3DeployCodePipelineActionRoleDefaultPolicy4D4CD095"
+          }
+        ],
+        "/SkillBridgePipelineStack/PipelineName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineName"
+          }
+        ],
+        "/SkillBridgePipelineStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/SkillBridgePipelineStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/SkillBridgePipelineStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "SkillBridgePipelineStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}

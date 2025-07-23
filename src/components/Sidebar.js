@@ -15,7 +15,12 @@ import {
   User,
   Menu,
   X,
-  ChevronRight
+  ChevronRight,
+  BookOpen,
+  TrendingUp,
+  Users,
+  Crown,
+  Brain
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -27,6 +32,7 @@ const Sidebar = () => {
   
   const isCoach = userAttributes && userAttributes['custom:user_type'] === 'COACH';
   const isChurch = userAttributes && userAttributes['custom:user_type'] === 'CHURCH';
+  const isLearner = userAttributes && userAttributes['custom:user_type'] === 'LEARNER';
   
   const handleLogout = async () => {
     try {
@@ -84,7 +90,7 @@ const Sidebar = () => {
               animate={isCollapsed && !isMobileOpen ? { opacity: 0, width: 0 } : { opacity: 1 }}
               className="text-2xl font-bold text-white"
             >
-              CoachFlow
+              SkillBridge
             </motion.h1>
           )}
           <button 
@@ -109,13 +115,25 @@ const Sidebar = () => {
           {(isCoach || isChurch) && (
             <>
               <NavItem to="/content" icon={<Video size={20} />} label="Content Management" />
+              <NavItem to="/ai-content" icon={<Brain size={20} />} label="AI Content Creator" />
               <NavItem to="/live" icon={<VideoOff size={20} />} label="Live Sessions" />
               <NavItem to="/payments" icon={<CreditCard size={20} />} label="Payment Settings" />
               <NavItem to="/analytics" icon={<BarChart size={20} />} label="Analytics" />
             </>
           )}
           
-          <NavItem to="/learn" icon={<GraduationCap size={20} />} label="Learning Portal" />
+          {isLearner ? (
+            <>
+              <NavItem to="/courses" icon={<BookOpen size={20} />} label="My Courses" />
+              <NavItem to="/progress" icon={<TrendingUp size={20} />} label="Progress" />
+              <NavItem to="/community" icon={<Users size={20} />} label="Community" />
+              <NavItem to="/ai-hub" icon={<Brain size={20} />} label="AI Hub" />
+              <NavItem to="/subscriptions" icon={<Crown size={20} />} label="Subscriptions" />
+              <NavItem to="/learn" icon={<GraduationCap size={20} />} label="Discover" />
+            </>
+          ) : (
+            <NavItem to="/learn" icon={<GraduationCap size={20} />} label="Learning Portal" />
+          )}
           <NavItem to="/profile" icon={<User size={20} />} label="Profile" />
           
           <button 

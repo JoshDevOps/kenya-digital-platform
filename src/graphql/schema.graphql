@@ -11,12 +11,16 @@ type User @model @auth(rules: [{ allow: owner }]) {
   videos: [Video] @hasMany
   liveSessions: [LiveSession] @hasMany
   purchases: [Purchase] @hasMany
+  courses: [Course] @hasMany
+  courseProgress: [CourseProgress] @hasMany
+  lessonCompletions: [LessonCompletion] @hasMany
 }
 
 enum UserType {
   COACH
   LEARNER
   CHURCH
+  STUDENT
 }
 
 type Video @model @auth(rules: [
@@ -116,6 +120,99 @@ type SessionAttendee @model @auth(rules: [
   user: User @belongsTo
 }
 
+# Course Management
+type Course @model @auth(rules: [
+  { allow: owner },
+  { allow: public, operations: [read] }
+]) {
+  id: ID!
+  title: String!
+  description: String!
+  level: CourseLevel!
+  duration: String
+  isPaid: Boolean!
+  price: Float
+  coverImageUrl: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: User @belongsTo
+  modules: [Module] @hasMany
+  purchases: [Purchase] @hasMany
+  progress: [CourseProgress] @hasMany
+}
+
+enum CourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+type Module @model @auth(rules: [
+  { allow: owner },
+  { allow: public, operations: [read] }
+]) {
+  id: ID!
+  courseId: ID!
+  title: String!
+  description: String
+  position: Int!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  course: Course @belongsTo
+  lessons: [Lesson] @hasMany
+}
+
+type Lesson @model @auth(rules: [
+  { allow: owner },
+  { allow: public, operations: [read] }
+]) {
+  id: ID!
+  moduleId: ID!
+  title: String!
+  description: String
+  type: LessonType!
+  contentUrl: String
+  duration: String
+  position: Int!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  module: Module @belongsTo
+  completions: [LessonCompletion] @hasMany
+}
+
+enum LessonType {
+  VIDEO
+  DOCUMENT
+  QUIZ
+  ASSIGNMENT
+}
+
+type CourseProgress @model @auth(rules: [
+  { allow: owner },
+  { allow: private, operations: [read] }
+]) {
+  id: ID!
+  userId: ID!
+  courseId: ID!
+  completedLessons: Int!
+  progress: Float!
+  lastAccessedAt: AWSDateTime!
+  user: User @belongsTo
+  course: Course @belongsTo
+}
+
+type LessonCompletion @model @auth(rules: [
+  { allow: owner },
+  { allow: private, operations: [read] }
+]) {
+  id: ID!
+  userId: ID!
+  lessonId: ID!
+  completedAt: AWSDateTime!
+  user: User @belongsTo
+  lesson: Lesson @belongsTo
+}
+
 # Queries
 type Query {
   getVideosByOwner(ownerId: ID!): [Video]
@@ -123,6 +220,8 @@ type Query {
   getVideoEngagementStats(videoId: ID!): VideoEngagementStats
   getSessionAttendanceStats(sessionId: ID!): SessionAttendanceStats
   getUserPurchases(userId: ID!): [Purchase]
+  getCoursesByOwner(ownerId: ID!): [Course]
+  getUserCourseProgress(userId: ID!, courseId: ID!): CourseProgress
 }
 
 type VideoEngagementStats {
@@ -144,6 +243,8 @@ type Mutation {
   processPayment(input: PaymentInput!): Purchase
   recordVideoEngagement(input: VideoEngagementInput!): VideoEngagement
   recordSessionAttendance(input: SessionAttendanceInput!): SessionAttendee
+  trackCourseProgress(input: CourseProgressInput!): CourseProgress
+  markLessonCompleted(input: LessonCompletionInput!): LessonCompletion
 }
 
 input PaymentInput {
@@ -164,4 +265,17 @@ input SessionAttendanceInput {
   sessionId: ID!
   joinTime: AWSDateTime!
   leaveTime: AWSDateTime
+}
+
+input CourseProgressInput {
+  userId: ID!
+  courseId: ID!
+  completedLessons: Int!
+  progress: Float!
+}
+
+input LessonCompletionInput {
+  userId: ID!
+  lessonId: ID!
+  completedAt: AWSDateTime!
 }

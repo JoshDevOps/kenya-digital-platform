@@ -1,4 +1,4 @@
-# Kenya Digital Platform
+# SkillBridge
 
 ## Fixing Compilation Errors
 

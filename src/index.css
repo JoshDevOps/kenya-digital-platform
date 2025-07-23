@@ -2,54 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    @apply bg-gray-50;
-  }
+/* Custom background pattern */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(rgba(251, 146, 60, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(251, 146, 60, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
-@layer components {
-  .sidebar {
-    @apply min-h-screen bg-gray-800 text-white;
-  }
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
 
-  .content {
-    @apply p-5;
-  }
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
 
-  .video-thumbnail {
-    @apply relative cursor-pointer;
-  }
+::-webkit-scrollbar-thumb {
+  background: #ea580c;
+  border-radius: 3px;
+}
 
-  .video-thumbnail .overlay {
-    @apply absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center opacity-0 transition-opacity duration-300;
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: #dc2626;
+}
 
-  .video-thumbnail:hover .overlay {
-    @apply opacity-100;
-  }
+/* Smooth transitions */
+* {
+  transition: all 0.2s ease-in-out;
+}
 
-  .stats-card {
-    @apply text-center p-5;
-  }
-
-  .stats-card .number {
-    @apply text-3xl font-bold;
-  }
-
-  .stats-card .label {
-    @apply text-gray-500;
-  }
-
-  .payment-option {
-    @apply border border-gray-200 rounded p-4 mb-4 cursor-pointer transition-all duration-300;
-  }
-
-  .payment-option:hover, .payment-option.selected {
-    @apply border-primary-500 bg-gray-50;
-  }
-
-  .payment-option.selected {
-    @apply shadow-sm shadow-primary-300;
-  }
+/* Focus styles */
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.1);
 }

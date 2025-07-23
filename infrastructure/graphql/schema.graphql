@@ -1,0 +1,130 @@
+type User @aws_cognito_user_pools {
+  id: ID!
+  email: String!
+  firstName: String!
+  lastName: String!
+  userType: UserType!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Course @aws_cognito_user_pools {
+  id: ID!
+  title: String!
+  description: String!
+  instructorId: ID!
+  instructor: User
+  price: Float!
+  duration: Int!
+  level: CourseLevel!
+  category: String!
+  thumbnail: String
+  videoUrl: String
+  materials: [String]
+  enrollmentCount: Int!
+  rating: Float
+  isPublished: Boolean!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Enrollment @aws_cognito_user_pools {
+  id: ID!
+  userId: ID!
+  courseId: ID!
+  user: User
+  course: Course
+  progress: Float!
+  completedLessons: [String]
+  enrolledAt: AWSDateTime!
+  completedAt: AWSDateTime
+}
+
+type Session @aws_cognito_user_pools {
+  id: ID!
+  courseId: ID!
+  title: String!
+  description: String
+  scheduledAt: AWSDateTime!
+  duration: Int!
+  meetingUrl: String
+  isLive: Boolean!
+  attendees: [ID]
+  createdAt: AWSDateTime!
+}
+
+enum UserType {
+  LEARNER
+  COACH
+  ADMIN
+}
+
+enum CourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+input CreateCourseInput {
+  title: String!
+  description: String!
+  price: Float!
+  duration: Int!
+  level: CourseLevel!
+  category: String!
+  thumbnail: String
+  videoUrl: String
+  materials: [String]
+}
+
+input UpdateCourseInput {
+  id: ID!
+  title: String
+  description: String
+  price: Float
+  duration: Int
+  level: CourseLevel
+  category: String
+  thumbnail: String
+  videoUrl: String
+  materials: [String]
+  isPublished: Boolean
+}
+
+input CreateSessionInput {
+  courseId: ID!
+  title: String!
+  description: String
+  scheduledAt: AWSDateTime!
+  duration: Int!
+}
+
+type Query {
+  getUser(id: ID!): User
+  listCourses(limit: Int, nextToken: String): CourseConnection
+  getCourse(id: ID!): Course
+  getUserEnrollments(userId: ID!): [Enrollment]
+  getCourseEnrollments(courseId: ID!): [Enrollment]
+  listSessions(courseId: ID): [Session]
+  getSession(id: ID!): Session
+}
+
+type Mutation {
+  createCourse(input: CreateCourseInput!): Course
+  updateCourse(input: UpdateCourseInput!): Course
+  deleteCourse(id: ID!): Course
+  enrollInCourse(courseId: ID!): Enrollment
+  updateProgress(enrollmentId: ID!, progress: Float!, completedLessons: [String]): Enrollment
+  createSession(input: CreateSessionInput!): Session
+  joinSession(sessionId: ID!): Session
+}
+
+type Subscription {
+  onSessionUpdate(sessionId: ID!): Session
+    @aws_subscribe(mutations: ["joinSession"])
+}
+
+type CourseConnection {
+  items: [Course]
+  nextToken: String
+}

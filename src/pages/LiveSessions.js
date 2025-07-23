@@ -1,238 +1,316 @@
 import React, { useState } from 'react';
-import { Row, Col, Button, Card, Badge, Alert } from 'react-bootstrap';
-import { FaPlus, FaVideo, FaEdit, FaTrash, FaExternalLinkAlt } from 'react-icons/fa';
-import LiveSessionModal from '../components/LiveSessionModal';
+import { Plus, Video, Calendar, Users, Clock, Edit, Trash2, ExternalLink, Play, Settings } from 'lucide-react';
 
 const LiveSessions = () => {
-  // Mock live sessions data
   const [sessions, setSessions] = useState([
     {
       id: 1,
-      title: 'Q&A Session: Digital Marketing Strategies',
-      description: 'Join us for a live Q&A session about effective digital marketing strategies for small businesses.',
-      date: '2023-06-20',
+      title: 'Digital Marketing Q&A Session',
+      description: 'Interactive Q&A session covering the latest digital marketing trends and strategies.',
+      date: '2024-01-28',
       time: '14:00',
+      duration: 60,
       platform: 'zoom',
       meetingLink: 'https://zoom.us/j/123456789',
       isPaid: true,
-      price: 300,
-      createdAt: '2023-06-10T10:30:00Z',
+      price: 25,
+      maxAttendees: 50,
+      registeredCount: 32,
+      status: 'scheduled',
+      category: 'Marketing'
     },
     {
       id: 2,
-      title: 'Sunday Virtual Service',
-      description: 'Weekly virtual church service with worship and sermon.',
-      date: '2023-06-18',
-      time: '09:00',
-      platform: 'google-meet',
-      meetingLink: 'https://meet.google.com/abc-defg-hij',
-      isPaid: false,
-      price: 0,
-      createdAt: '2023-06-05T14:45:00Z',
-    },
-    {
-      id: 3,
-      title: 'Mathematics Tutoring: Calculus',
-      description: 'Live tutoring session covering calculus concepts for college students.',
-      date: '2023-06-22',
-      time: '16:30',
+      title: 'React Development Workshop',
+      description: 'Hands-on workshop building a complete React application from scratch.',
+      date: '2024-01-30',
+      time: '16:00',
+      duration: 120,
       platform: 'zoom',
       meetingLink: 'https://zoom.us/j/987654321',
       isPaid: true,
-      price: 500,
-      createdAt: '2023-06-12T09:15:00Z',
+      price: 49,
+      maxAttendees: 30,
+      registeredCount: 28,
+      status: 'scheduled',
+      category: 'Development'
     },
+    {
+      id: 3,
+      title: 'Content Strategy Masterclass',
+      description: 'Learn how to create compelling content that drives engagement and conversions.',
+      date: '2024-01-25',
+      time: '10:00',
+      duration: 90,
+      platform: 'zoom',
+      meetingLink: 'https://zoom.us/j/456789123',
+      isPaid: false,
+      price: 0,
+      maxAttendees: 100,
+      registeredCount: 67,
+      status: 'completed',
+      category: 'Content'
+    }
   ]);
 
-  const [showModal, setShowModal] = useState(false);
-  const [editSession, setEditSession] = useState(null);
-  const [successMessage, setSuccessMessage] = useState('');
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [selectedSession, setSelectedSession] = useState(null);
+  const [viewMode, setViewMode] = useState('upcoming');
 
-  // Handle session save (new or edit)
-  const handleSaveSession = (sessionData) => {
-    if (editSession) {
-      // Update existing session
-      setSessions(sessions.map(s => s.id === sessionData.id ? { ...s, ...sessionData } : s));
-      setSuccessMessage('Live session updated successfully!');
-    } else {
-      // Add new session
-      setSessions([...sessions, sessionData]);
-      setSuccessMessage('Live session created successfully!');
-    }
-    
-    // Clear success message after 3 seconds
-    setTimeout(() => {
-      setSuccessMessage('');
-    }, 3000);
-  };
-
-  // Handle session edit
-  const handleEditSession = (session) => {
-    setEditSession(session);
-    setShowModal(true);
-  };
-
-  // Handle session delete
-  const handleDeleteSession = (sessionId) => {
-    if (window.confirm('Are you sure you want to delete this live session?')) {
-      setSessions(sessions.filter(s => s.id !== sessionId));
-      setSuccessMessage('Live session deleted successfully!');
-      
-      // Clear success message after 3 seconds
-      setTimeout(() => {
-        setSuccessMessage('');
-      }, 3000);
-    }
-  };
-
-  // Close modal and reset edit session
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setEditSession(null);
-  };
-
-  // Sort sessions by date (upcoming first)
-  const sortedSessions = [...sessions].sort((a, b) => {
-    const dateA = new Date(`${a.date}T${a.time}`);
-    const dateB = new Date(`${b.date}T${b.time}`);
-    return dateA - dateB;
-  });
-
-  // Separate upcoming and past sessions
   const now = new Date();
-  const upcomingSessions = sortedSessions.filter(session => {
+  const upcomingSessions = sessions.filter(session => {
     const sessionDate = new Date(`${session.date}T${session.time}`);
     return sessionDate >= now;
   });
-  
-  const pastSessions = sortedSessions.filter(session => {
+
+  const pastSessions = sessions.filter(session => {
     const sessionDate = new Date(`${session.date}T${session.time}`);
     return sessionDate < now;
   });
 
+  const handleDeleteSession = (sessionId) => {
+    if (window.confirm('Are you sure you want to delete this session?')) {
+      setSessions(sessions.filter(s => s.id !== sessionId));
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'scheduled': return 'bg-blue-100 text-blue-800';
+      case 'live': return 'bg-red-100 text-red-800';
+      case 'completed': return 'bg-green-100 text-green-800';
+      case 'cancelled': return 'bg-gray-100 text-gray-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const formatDate = (date, time) => {
+    const sessionDate = new Date(`${date}T${time}`);
+    return sessionDate.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const formatTime = (time) => {
+    return new Date(`2024-01-01T${time}`).toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
+  };
+
   return (
-    <div>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>Live Sessions</h2>
-        <Button variant="primary" onClick={() => setShowModal(true)}>
-          <FaPlus className="me-2" /> Create New Session
-        </Button>
-      </div>
-      
-      {successMessage && (
-        <Alert variant="success" onClose={() => setSuccessMessage('')} dismissible>
-          {successMessage}
-        </Alert>
-      )}
-      
-      <h4 className="mb-3">Upcoming Sessions</h4>
-      {upcomingSessions.length > 0 ? (
-        upcomingSessions.map(session => (
-          <Card key={session.id} className="mb-3">
-            <Card.Body>
-              <div className="d-flex justify-content-between align-items-start">
-                <div>
-                  <div className="d-flex align-items-center mb-2">
-                    <h5 className="mb-0 me-2">{session.title}</h5>
-                    {session.isPaid && (
-                      <Badge bg="warning" text="dark">
-                        KSh {session.price}
-                      </Badge>
-                    )}
-                  </div>
-                  <p className="text-muted mb-3">{session.description}</p>
-                  <div className="d-flex align-items-center mb-2">
-                    <FaVideo className="me-2 text-primary" />
-                    <span>
-                      {session.platform === 'zoom' ? 'Zoom' : 'Google Meet'} | 
-                      {' '}{new Date(`${session.date}T${session.time}`).toLocaleDateString()} | 
-                      {' '}{session.time}
-                    </span>
-                  </div>
-                </div>
-                <div>
-                  <Button 
-                    variant="outline-primary" 
-                    size="sm" 
-                    className="me-2"
-                    href={session.meetingLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <FaExternalLinkAlt className="me-1" /> Join
-                  </Button>
-                  <Button 
-                    variant="outline-secondary" 
-                    size="sm" 
-                    className="me-2"
-                    onClick={() => handleEditSession(session)}
-                  >
-                    <FaEdit />
-                  </Button>
-                  <Button 
-                    variant="outline-danger" 
-                    size="sm"
-                    onClick={() => handleDeleteSession(session.id)}
-                  >
-                    <FaTrash />
-                  </Button>
-                </div>
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Live Sessions</h1>
+            <p className="text-gray-600">Schedule and manage your live training sessions</p>
+          </div>
+          <button 
+            onClick={() => setShowCreateModal(true)}
+            className="bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 transition-colors flex items-center"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            Schedule Session
+          </button>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+            <div className="flex items-center">
+              <div className="bg-blue-100 p-3 rounded-lg">
+                <Calendar className="w-6 h-6 text-blue-600" />
               </div>
-            </Card.Body>
-          </Card>
-        ))
-      ) : (
-        <p className="text-muted">No upcoming sessions. Create a new session to get started!</p>
-      )}
-      
-      {pastSessions.length > 0 && (
-        <>
-          <h4 className="mb-3 mt-5">Past Sessions</h4>
-          {pastSessions.map(session => (
-            <Card key={session.id} className="mb-3 bg-light">
-              <Card.Body>
-                <div className="d-flex justify-content-between align-items-start">
-                  <div>
-                    <div className="d-flex align-items-center mb-2">
-                      <h5 className="mb-0 me-2">{session.title}</h5>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Upcoming</p>
+                <p className="text-2xl font-bold text-gray-900">{upcomingSessions.length}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+            <div className="flex items-center">
+              <div className="bg-green-100 p-3 rounded-lg">
+                <Users className="w-6 h-6 text-green-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Total Registered</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {sessions.reduce((sum, session) => sum + session.registeredCount, 0)}
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+            <div className="flex items-center">
+              <div className="bg-purple-100 p-3 rounded-lg">
+                <Video className="w-6 h-6 text-purple-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Completed</p>
+                <p className="text-2xl font-bold text-gray-900">{pastSessions.length}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+            <div className="flex items-center">
+              <div className="bg-orange-100 p-3 rounded-lg">
+                <Clock className="w-6 h-6 text-orange-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Avg Duration</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {Math.round(sessions.reduce((sum, session) => sum + session.duration, 0) / sessions.length)}m
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* View Toggle */}
+        <div className="flex space-x-1 bg-gray-200 rounded-lg p-1 mb-8 w-fit">
+          <button
+            onClick={() => setViewMode('upcoming')}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              viewMode === 'upcoming' 
+                ? 'bg-white text-gray-900 shadow-sm' 
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Upcoming ({upcomingSessions.length})
+          </button>
+          <button
+            onClick={() => setViewMode('past')}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              viewMode === 'past' 
+                ? 'bg-white text-gray-900 shadow-sm' 
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Past ({pastSessions.length})
+          </button>
+        </div>
+
+        {/* Sessions List */}
+        <div className="space-y-6">
+          {(viewMode === 'upcoming' ? upcomingSessions : pastSessions).map((session) => (
+            <div key={session.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <div className="p-6">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <h3 className="text-xl font-semibold text-gray-900">{session.title}</h3>
+                      <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(session.status)}`}>
+                        {session.status}
+                      </span>
                       {session.isPaid && (
-                        <Badge bg="secondary">
-                          KSh {session.price}
-                        </Badge>
+                        <span className="bg-yellow-100 text-yellow-800 px-2 py-1 text-xs rounded-full">
+                          ${session.price}
+                        </span>
                       )}
                     </div>
-                    <p className="text-muted mb-3">{session.description}</p>
-                    <div className="d-flex align-items-center mb-2">
-                      <FaVideo className="me-2 text-secondary" />
-                      <span>
-                        {session.platform === 'zoom' ? 'Zoom' : 'Google Meet'} | 
-                        {' '}{new Date(`${session.date}T${session.time}`).toLocaleDateString()} | 
-                        {' '}{session.time}
-                      </span>
+                    
+                    <p className="text-gray-600 mb-4">{session.description}</p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600">
+                      <div className="flex items-center">
+                        <Calendar className="w-4 h-4 mr-2" />
+                        {formatDate(session.date, session.time)}
+                      </div>
+                      <div className="flex items-center">
+                        <Clock className="w-4 h-4 mr-2" />
+                        {formatTime(session.time)} ({session.duration}min)
+                      </div>
+                      <div className="flex items-center">
+                        <Users className="w-4 h-4 mr-2" />
+                        {session.registeredCount}/{session.maxAttendees} registered
+                      </div>
+                      <div className="flex items-center">
+                        <Video className="w-4 h-4 mr-2" />
+                        {session.platform === 'zoom' ? 'Zoom' : 'Google Meet'}
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    <Button 
-                      variant="outline-danger" 
-                      size="sm"
+                  
+                  <div className="flex items-center space-x-2 ml-6">
+                    {viewMode === 'upcoming' && (
+                      <>
+                        <button 
+                          onClick={() => window.open(session.meetingLink, '_blank')}
+                          className="bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center"
+                        >
+                          <Play className="w-4 h-4 mr-2" />
+                          Start
+                        </button>
+                        <button className="p-2 text-gray-400 hover:text-blue-600 transition-colors">
+                          <Settings className="w-4 h-4" />
+                        </button>
+                      </>
+                    )}
+                    <button className="p-2 text-gray-400 hover:text-orange-600 transition-colors">
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button 
                       onClick={() => handleDeleteSession(session.id)}
+                      className="p-2 text-gray-400 hover:text-red-600 transition-colors"
                     >
-                      <FaTrash />
-                    </Button>
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
-              </Card.Body>
-            </Card>
+                
+                {/* Progress Bar for Registration */}
+                <div className="mt-4">
+                  <div className="flex justify-between text-sm text-gray-600 mb-1">
+                    <span>Registration Progress</span>
+                    <span>{Math.round((session.registeredCount / session.maxAttendees) * 100)}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-orange-600 h-2 rounded-full transition-all duration-300" 
+                      style={{ width: `${(session.registeredCount / session.maxAttendees) * 100}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           ))}
-        </>
-      )}
-      
-      <LiveSessionModal 
-        show={showModal} 
-        handleClose={handleCloseModal} 
-        handleSave={handleSaveSession}
-        editSession={editSession}
-      />
+        </div>
+
+        {/* Empty State */}
+        {(viewMode === 'upcoming' ? upcomingSessions : pastSessions).length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-4">
+              <Video className="w-16 h-16 mx-auto" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No {viewMode} sessions
+            </h3>
+            <p className="text-gray-600 mb-6">
+              {viewMode === 'upcoming' 
+                ? 'Schedule your first live session to engage with your students'
+                : 'Your completed sessions will appear here'
+              }
+            </p>
+            {viewMode === 'upcoming' && (
+              <button 
+                onClick={() => setShowCreateModal(true)}
+                className="bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 transition-colors"
+              >
+                Schedule Session
+              </button>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
