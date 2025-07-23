@@ -13,7 +13,7 @@ const AIHub = () => {
     { id: 'tutor', name: 'AI Tutor', icon: <MessageSquare className="w-5 h-5" /> },
     { id: 'recommendations', name: 'Smart Recommendations', icon: <TrendingUp className="w-5 h-5" /> },
     { id: 'content', name: 'Content Generator', icon: <Wand2 className="w-5 h-5" /> },
-    { id: 'paths', name: 'Learning Paths', icon: <Route className="w-5 h-5" /> }
+    { id: 'paths', name: 'Learning Paths', icon: <MapPin className="w-5 h-5" /> }
   ];
 
   const handleContentGenerated = (content) => {
@@ -62,7 +62,7 @@ const AIHub = () => {
           
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
             <div className="bg-orange-100 p-3 rounded-lg w-fit mb-4">
-              <Route className="w-6 h-6 text-orange-600" />
+              <MapPin className="w-6 h-6 text-orange-600" />
             </div>
             <h3 className="font-semibold text-gray-900 mb-2">Learning Paths</h3>
             <p className="text-sm text-gray-600">Customized learning journeys</p>

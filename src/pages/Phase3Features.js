@@ -38,7 +38,7 @@ const Phase3Features = () => {
     },
     {
       category: 'Personalized Learning Paths',
-      icon: <Route className="w-8 h-8 text-orange-600" />,
+      icon: <MapPin className="w-8 h-8 text-orange-600" />,
       items: [
         'Goal-based path generation',
         'Adaptive learning sequences',
