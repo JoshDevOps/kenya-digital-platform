@@ -33,7 +33,9 @@
     "clsx": "^2.0.0",
     "class-variance-authority": "^0.7.0",
     "react-chartjs-2": "^5.2.0",
-    "chart.js": "^4.4.0"
+    "chart.js": "^4.4.0",
+    "tailwind-merge": "^1.14.0",
+    "uuid": "^9.0.0"
   },
   "eslintConfig": {
     "extends": [
