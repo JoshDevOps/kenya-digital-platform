@@ -23,7 +23,9 @@
     "aws-amplify": "^5.0.0",
     "react-player": "^2.10.1",
     "bootstrap": "^5.2.0",
-    "react-bootstrap": "^2.5.0"
+    "react-bootstrap": "^2.5.0",
+    "lucide-react": "^0.263.1",
+    "react-icons": "^4.10.1"
   },
   "eslintConfig": {
     "extends": [
