@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Brain, Wand2, Route, MessageSquare, TrendingUp, Zap } from 'lucide-react';
+import { Brain, Wand2, MapPin, MessageSquare, TrendingUp, Zap } from 'lucide-react';
 import AITutor from '../components/AITutor';
 import SmartRecommendations from '../components/SmartRecommendations';
 import AutoContentGenerator from '../components/AutoContentGenerator';

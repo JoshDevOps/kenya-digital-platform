@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Route, Target, CheckCircle, Clock, Brain } from 'lucide-react';
+import { MapPin, Target, CheckCircle, Clock, Brain } from 'lucide-react';
 
 const LearningPathAI = ({ userId }) => {
   const [goals, setGoals] = useState('');

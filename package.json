@@ -9,7 +9,8 @@
     "eject": "react-scripts eject",
     "deploy:infra": "cd infrastructure && npm install && cdk deploy --all",
     "setup:env": "node scripts/get-env-vars.js",
-    "setup:pipeline": "bash setup-pipeline.sh"
+    "setup:pipeline": "bash setup-pipeline.sh",
+    "validate-push": "node scripts/validate-and-push.js"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",

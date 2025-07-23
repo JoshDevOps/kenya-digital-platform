@@ -1,5 +1,5 @@
 import React from 'react';
-import { Brain, MessageSquare, Wand2, Route, TrendingUp, Zap, Target, Lightbulb } from 'lucide-react';
+import { Brain, MessageSquare, Wand2, MapPin, TrendingUp, Zap, Target, Lightbulb } from 'lucide-react';
 
 const Phase3Features = () => {
   const aiFeatures = [
