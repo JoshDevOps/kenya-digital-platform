@@ -1,6 +1,6 @@
-import { gql } from '@apollo/client';
+// GraphQL mutations for AWS AppSync
 
-export const CREATE_COURSE = gql`
+export const CREATE_COURSE = `
   mutation CreateCourse($input: CreateCourseInput!) {
     createCourse(input: $input) {
       id
@@ -23,7 +23,7 @@ export const CREATE_COURSE = gql`
   }
 `;
 
-export const UPDATE_COURSE = gql`
+export const UPDATE_COURSE = `
   mutation UpdateCourse($input: UpdateCourseInput!) {
     updateCourse(input: $input) {
       id
@@ -42,7 +42,7 @@ export const UPDATE_COURSE = gql`
   }
 `;
 
-export const ENROLL_IN_COURSE = gql`
+export const ENROLL_IN_COURSE = `
   mutation EnrollInCourse($courseId: ID!) {
     enrollInCourse(courseId: $courseId) {
       id
@@ -54,7 +54,7 @@ export const ENROLL_IN_COURSE = gql`
   }
 `;
 
-export const UPDATE_PROGRESS = gql`
+export const UPDATE_PROGRESS = `
   mutation UpdateProgress($enrollmentId: ID!, $progress: Float!, $completedLessons: [String]) {
     updateProgress(enrollmentId: $enrollmentId, progress: $progress, completedLessons: $completedLessons) {
       id
@@ -64,7 +64,7 @@ export const UPDATE_PROGRESS = gql`
   }
 `;
 
-export const CREATE_SESSION = gql`
+export const CREATE_SESSION = `
   mutation CreateSession($input: CreateSessionInput!) {
     createSession(input: $input) {
       id

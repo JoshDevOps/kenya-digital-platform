@@ -36,7 +36,9 @@
     "react-chartjs-2": "^5.2.0",
     "chart.js": "^4.4.0",
     "tailwind-merge": "^1.14.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "@apollo/client": "^3.8.0",
+    "graphql": "^16.8.0"
   },
   "eslintConfig": {
     "extends": [

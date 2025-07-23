@@ -1,6 +1,6 @@
-import { gql } from '@apollo/client';
+// GraphQL queries for AWS AppSync
 
-export const LIST_COURSES = gql`
+export const LIST_COURSES = `
   query ListCourses($limit: Int, $nextToken: String) {
     listCourses(limit: $limit, nextToken: $nextToken) {
       items {
@@ -23,7 +23,7 @@ export const LIST_COURSES = gql`
   }
 `;
 
-export const GET_COURSE = gql`
+export const GET_COURSE = `
   query GetCourse($id: ID!) {
     getCourse(id: $id) {
       id
@@ -52,7 +52,7 @@ export const GET_COURSE = gql`
   }
 `;
 
-export const GET_USER_ENROLLMENTS = gql`
+export const GET_USER_ENROLLMENTS = `
   query GetUserEnrollments($userId: ID!) {
     getUserEnrollments(userId: $userId) {
       id
@@ -75,7 +75,7 @@ export const GET_USER_ENROLLMENTS = gql`
   }
 `;
 
-export const LIST_SESSIONS = gql`
+export const LIST_SESSIONS = `
   query ListSessions($courseId: ID) {
     listSessions(courseId: $courseId) {
       id
@@ -92,7 +92,7 @@ export const LIST_SESSIONS = gql`
   }
 `;
 
-export const GET_SESSION = gql`
+export const GET_SESSION = `
   query GetSession($id: ID!) {
     getSession(id: $id) {
       id
