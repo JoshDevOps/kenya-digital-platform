@@ -42,7 +42,7 @@ const EnrollmentButton = ({ course, onEnrollmentChange }) => {
       
       // In production, this would integrate with payment processing
       const confirmEnroll = window.confirm(
-        `Enroll in "${course.title}" for $${course.price}?\n\nThis is a demo - no payment will be processed.`
+        `Enroll in "${course.title}" for FREE?\n\nThis is a demo enrollment.`
       );
       
       if (!confirmEnroll) return;
@@ -98,7 +98,7 @@ const EnrollmentButton = ({ course, onEnrollmentChange }) => {
       ) : (
         <>
           <ShoppingCart className="w-5 h-5 mr-2" />
-          Enroll for ${course.price}
+          Enroll for FREE
         </>
       )}
     </button>

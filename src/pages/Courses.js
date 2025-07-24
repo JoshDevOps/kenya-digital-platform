@@ -1,9 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Clock, Users, Star } from 'lucide-react';
+import { CourseService } from '../services/courseService';
+import { sampleCourses } from '../services/sampleData';
+import EnrollmentButton from '../components/EnrollmentButton';
+import { useAuth } from '../contexts/AuthContext';
 
 const Courses = () => {
-  const courses = [
+  const { currentUser } = useAuth();
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadAllCourses();
+  }, []);
+
+  const loadAllCourses = async () => {
+    try {
+      setLoading(true);
+      const dbCourses = await CourseService.getAllCourses();
+      setCourses([...dbCourses, ...sampleCourses]);
+    } catch (error) {
+      console.error('Error loading courses:', error);
+      setCourses(sampleCourses);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const staticCourses = [
     {
       id: 1,
       title: 'Digital Marketing Fundamentals',
@@ -93,49 +118,55 @@ const Courses = () => {
       {/* Courses Grid */}
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.map((course) => (
-              <div key={course.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className={`px-2 py-1 text-xs rounded ${
-                      course.level === 'Beginner' ? 'bg-green-100 text-green-800' :
-                      course.level === 'Intermediate' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {course.level}
-                    </span>
-                    <span className="text-lg font-bold text-orange-600">{course.price}</span>
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-2 border-orange-500 border-t-transparent"></div>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {courses.map((course) => (
+                <div key={course.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                  <img 
+                    src={course.thumbnail || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=200&fit=crop'} 
+                    alt={course.title} 
+                    className="w-full h-48 object-cover" 
+                  />
+                  <div className="p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className={`px-2 py-1 text-xs rounded ${
+                        (course.level === 'BEGINNER' || course.level === 'Beginner') ? 'bg-green-100 text-green-800' :
+                        (course.level === 'INTERMEDIATE' || course.level === 'Intermediate') ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {course.level || 'Beginner'}
+                      </span>
+                      <span className="text-lg font-bold text-orange-600">Free</span>
+                    </div>
+                    
+                    <h3 className="text-xl font-semibold mb-2">{course.title}</h3>
+                    <p className="text-gray-600 mb-4">{course.description}</p>
+                    
+                    <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                      <div className="flex items-center">
+                        <Clock className="w-4 h-4 mr-1" />
+                        {course.duration}{course.duration && typeof course.duration === 'number' ? ' hours' : ''}
+                      </div>
+                      <div className="flex items-center">
+                        <Users className="w-4 h-4 mr-1" />
+                        {course.enrollmentCount || course.students || 0}
+                      </div>
+                      <div className="flex items-center">
+                        <Star className="w-4 h-4 mr-1 text-yellow-400" />
+                        {course.rating || 0}
+                      </div>
+                    </div>
+                    
+                    <EnrollmentButton course={course} onEnrollmentChange={loadAllCourses} />
                   </div>
-                  
-                  <h3 className="text-xl font-semibold mb-2">{course.title}</h3>
-                  <p className="text-gray-600 mb-4">{course.description}</p>
-                  
-                  <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                    <div className="flex items-center">
-                      <Clock className="w-4 h-4 mr-1" />
-                      {course.duration}
-                    </div>
-                    <div className="flex items-center">
-                      <Users className="w-4 h-4 mr-1" />
-                      {course.students}
-                    </div>
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 mr-1 text-yellow-400" />
-                      {course.rating}
-                    </div>
-                  </div>
-                  
-                  <Link 
-                    to="/register" 
-                    className="w-full bg-orange-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-orange-700 transition-colors block text-center"
-                  >
-                    Enroll Now
-                  </Link>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>
