@@ -28,6 +28,7 @@ import CourseDetail from './pages/CourseDetail';
 import LearnerDashboard from './pages/LearnerDashboard';
 import LearnerCourses from './pages/LearnerCourses';
 import LearnerProgress from './pages/LearnerProgress';
+import MyCourses from './pages/MyCourses';
 import CoachDashboard from './pages/CoachDashboard';
 import Subscriptions from './pages/Subscriptions';
 import Community from './pages/Community';
@@ -116,6 +117,7 @@ function AppContent() {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/learn" element={<StudentView />} />
                 <Route path="/courses" element={<LearnerCourses />} />
+                <Route path="/my-courses" element={<MyCourses />} />
                 <Route path="/progress" element={<LearnerProgress />} />
                 <Route path="/subscriptions" element={<Subscriptions />} />
                 <Route path="/community" element={<Community />} />

@@ -54,10 +54,15 @@ export const CourseProvider = ({ children }) => {
             console.log('Total courses for coach:', userCourses.length);
         } else {
           // Learners see all available courses
+          console.log('Fetching courses for learner:', currentUser.username);
           const result = await API.graphql(graphqlOperation(LIST_COURSES, { limit: 50 }));
+          console.log('GraphQL result for learner:', result);
           const apiCourses = result.data.listCourses.items || [];
+          console.log('API courses for learner:', apiCourses);
           const localCourses = await CourseService.getAllCourses();
+          console.log('Local courses for learner:', localCourses);
           userCourses = [...apiCourses, ...localCourses, ...sampleCourses];
+          console.log('Total courses for learner:', userCourses.length);
         }
         } catch (apiError) {
           console.error('GraphQL API error:', apiError);

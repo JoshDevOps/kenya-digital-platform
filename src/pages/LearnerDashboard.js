@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Play, Clock, Award, TrendingUp, Calendar, Search, Filter, Star, Users, CheckCircle } from 'lucide-react';
+import { useCourses } from '../contexts/CourseContext';
+import EnrollmentButton from '../components/EnrollmentButton';
 
 const LearnerDashboard = () => {
+  const { courses, loading } = useCourses();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
@@ -113,7 +116,7 @@ const LearnerDashboard = () => {
 
   const categories = ['all', 'Development', 'Marketing', 'Data Science', 'Business', 'Technology'];
 
-  const filteredRecommended = recommendedCourses.filter(course => {
+  const filteredRecommended = courses.filter(course => {
     const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || course.category === selectedCategory;
     return matchesSearch && matchesCategory;
@@ -296,49 +299,57 @@ const LearnerDashboard = () => {
             </select>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredRecommended.map((course) => (
-              <div key={course.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-                <img src={course.thumbnail} alt={course.title} className="w-full h-48 object-cover" />
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-orange-600 font-medium">{course.category}</span>
-                    <span className="text-lg font-bold text-orange-600">{course.price}</span>
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{course.title}</h3>
-                  <p className="text-sm text-gray-600 mb-4">by {course.instructor}</p>
-                  
-                  <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                    <div className="flex items-center">
-                      <Clock className="w-4 h-4 mr-1" />
-                      {course.duration}
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-2 border-orange-500 border-t-transparent"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredRecommended.map((course) => (
+                <div key={course.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+                  <img 
+                    src={course.thumbnail || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=200&fit=crop'} 
+                    alt={course.title} 
+                    className="w-full h-48 object-cover" 
+                  />
+                  <div className="p-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm text-orange-600 font-medium">{course.category}</span>
+                      <span className="text-lg font-bold text-orange-600">Free</span>
                     </div>
-                    <div className="flex items-center">
-                      <Users className="w-4 h-4 mr-1" />
-                      {course.students}
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{course.title}</h3>
+                    <p className="text-sm text-gray-600 mb-4">{course.description}</p>
+                    
+                    <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                      <div className="flex items-center">
+                        <Clock className="w-4 h-4 mr-1" />
+                        {course.duration}{typeof course.duration === 'number' ? ' hours' : ''}
+                      </div>
+                      <div className="flex items-center">
+                        <Users className="w-4 h-4 mr-1" />
+                        {course.enrollmentCount || course.students || 0}
+                      </div>
+                      <div className="flex items-center">
+                        <Star className="w-4 h-4 mr-1 text-yellow-400" />
+                        {course.rating || 0}
+                      </div>
                     </div>
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 mr-1 text-yellow-400" />
-                      {course.rating}
+                    
+                    <div className="flex items-center justify-between">
+                      <span className={`px-2 py-1 text-xs rounded ${
+                        (course.level === 'BEGINNER' || course.level === 'Beginner') ? 'bg-green-100 text-green-800' :
+                        (course.level === 'INTERMEDIATE' || course.level === 'Intermediate') ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {course.level || 'Beginner'}
+                      </span>
+                      <EnrollmentButton course={course} />
                     </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span className={`px-2 py-1 text-xs rounded ${
-                      course.level === 'Beginner' ? 'bg-green-100 text-green-800' :
-                      course.level === 'Intermediate' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {course.level}
-                    </span>
-                    <button className="bg-orange-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-orange-700 transition-colors">
-                      Enroll Now
-                    </button>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

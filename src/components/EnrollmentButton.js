@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ShoppingCart, CheckCircle, Loader } from 'lucide-react';
 import { CourseService } from '../services/courseService';
 import { useAuth } from '../contexts/AuthContext';
+import { API, graphqlOperation } from 'aws-amplify';
+import { ENROLL_IN_COURSE } from '../graphql/mutations';
 
 const EnrollmentButton = ({ course, onEnrollmentChange }) => {
   const { currentUser } = useAuth();
@@ -32,26 +34,65 @@ const EnrollmentButton = ({ course, onEnrollmentChange }) => {
     }
 
     if (enrolled) {
-      // Navigate to course content
       window.location.href = `/courses/${course.id}`;
       return;
     }
 
     try {
-      setLoading(true);
+      // Step 1: Course overview
+      const confirmOverview = window.confirm(
+        `📚 Course: ${course.title}\n💰 Price: FREE\n⏱️ Duration: ${course.duration} hours\n📈 Level: ${course.level || 'Beginner'}\n\nProceed to enrollment?`
+      );
       
-      // In production, this would integrate with payment processing
+      if (!confirmOverview) return;
+      
+      // Step 2: Final confirmation
       const confirmEnroll = window.confirm(
-        `Enroll in "${course.title}" for FREE?\n\nThis is a demo enrollment.`
+        `✅ Ready to enroll?\n\nBy clicking OK, you will:\n• Get instant access to course materials\n• Join the learning community\n• Track your progress\n\nConfirm enrollment in "${course.title}"?`
       );
       
       if (!confirmEnroll) return;
-
-      await CourseService.enrollInCourse(currentUser.username, course.id);
-      setEnrolled(true);
-      onEnrollmentChange && onEnrollmentChange();
       
-      alert('Successfully enrolled! You can now access the course content.');
+      setLoading(true);
+      
+      try {
+        // Try GraphQL API first
+        await API.graphql(graphqlOperation(ENROLL_IN_COURSE, {
+          courseId: course.id
+        }));
+        
+        setEnrolled(true);
+        
+        // Success notification
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+        notification.innerHTML = `
+          <div class="flex items-center">
+            <span class="mr-2">🎉</span>
+            <div>
+              <div class="font-semibold">Enrollment Successful!</div>
+              <div class="text-sm">Welcome to "${course.title}"</div>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          if (document.body.contains(notification)) {
+            document.body.removeChild(notification);
+          }
+        }, 5000);
+        
+      } catch (apiError) {
+        console.log('GraphQL enrollment failed, using localStorage:', apiError);
+        
+        // Fallback to localStorage
+        await CourseService.enrollInCourse(currentUser.username, course.id);
+        setEnrolled(true);
+        alert('Successfully enrolled! You can now access the course content.');
+      }
+      
+      onEnrollmentChange && onEnrollmentChange();
       
     } catch (error) {
       alert('Enrollment failed: ' + error.message);
