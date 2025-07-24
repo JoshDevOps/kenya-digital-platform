@@ -63,7 +63,11 @@ const ContentManagement = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   const handleSaveCourse = (courseData) => {
-    setCourses([...courses, courseData]);
+    setCourses([courseData, ...courses]);
+    // Also refresh from context to get latest data
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
 
   const categories = ['all', 'Marketing', 'Development', 'Design', 'Business', 'Content'];

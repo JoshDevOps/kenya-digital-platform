@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Storage, API, graphqlOperation } from 'aws-amplify';
+import { CREATE_COURSE } from '../graphql/mutations';
 import { Upload, Video, FileText, DollarSign, Save, X } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { useAuth } from '../contexts/AuthContext';
@@ -108,22 +109,43 @@ const CourseCreator = ({ onClose, onCourseCreated }) => {
   };
 
   const saveCourseToStorage = async (course) => {
-    // Save to localStorage as fallback
-    const existingCourses = JSON.parse(localStorage.getItem('skillbridge_courses') || '[]');
-    const newCourse = {
-      ...course,
-      id: uuidv4(),
-      instructorId: currentUser.username,
-      enrollmentCount: 0,
-      rating: 0,
-      isPublished: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    
-    existingCourses.push(newCourse);
-    localStorage.setItem('skillbridge_courses', JSON.stringify(existingCourses));
-    return newCourse;
+    try {
+      // Try GraphQL API first
+      const result = await API.graphql(graphqlOperation(CREATE_COURSE, {
+        input: {
+          title: course.title,
+          description: course.description,
+          price: course.price,
+          duration: course.duration,
+          level: course.level,
+          category: course.category,
+          thumbnail: course.thumbnail,
+          videoUrl: course.videoUrl,
+          materials: course.materials || []
+        }
+      }));
+      
+      return result.data.createCourse;
+    } catch (error) {
+      console.log('GraphQL API failed, using localStorage:', error);
+      
+      // Fallback to localStorage
+      const existingCourses = JSON.parse(localStorage.getItem('skillbridge_courses') || '[]');
+      const newCourse = {
+        ...course,
+        id: uuidv4(),
+        instructorId: currentUser.username,
+        enrollmentCount: 0,
+        rating: 0,
+        isPublished: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      existingCourses.push(newCourse);
+      localStorage.setItem('skillbridge_courses', JSON.stringify(existingCourses));
+      return newCourse;
+    }
   };
 
   const handleSubmit = async (event) => {

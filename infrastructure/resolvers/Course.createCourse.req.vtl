@@ -7,7 +7,7 @@
   "attributeValues": {
     "title": $util.dynamodb.toDynamoDBJson($ctx.args.input.title),
     "description": $util.dynamodb.toDynamoDBJson($ctx.args.input.description),
-    "instructorId": $util.dynamodb.toDynamoDBJson($ctx.identity.username),
+    "instructorId": $util.dynamodb.toDynamoDBJson($ctx.identity.sub),
     "price": $util.dynamodb.toDynamoDBJson($ctx.args.input.price),
     "duration": $util.dynamodb.toDynamoDBJson($ctx.args.input.duration),
     "level": $util.dynamodb.toDynamoDBJson($ctx.args.input.level),

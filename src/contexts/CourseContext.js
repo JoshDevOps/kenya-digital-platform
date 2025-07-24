@@ -189,6 +189,11 @@ export const CourseProvider = ({ children }) => {
     fetchUserCourses();
   }, [currentUser, userAttributes]);
 
+  // Refresh courses function
+  const refreshCourses = () => {
+    fetchUserCourses();
+  };
+
   // Context value
   const value = {
     courses,
@@ -198,6 +203,7 @@ export const CourseProvider = ({ children }) => {
     loading,
     error,
     fetchUserCourses,
+    refreshCourses,
     loadCourse,
     setActiveLesson,
     completeLesson

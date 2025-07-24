@@ -5,7 +5,7 @@
     "id": $util.dynamodb.toDynamoDBJson($util.autoId())
   },
   "attributeValues": {
-    "userId": $util.dynamodb.toDynamoDBJson($ctx.identity.username),
+    "userId": $util.dynamodb.toDynamoDBJson($ctx.identity.sub),
     "courseId": $util.dynamodb.toDynamoDBJson($ctx.args.courseId),
     "progress": $util.dynamodb.toDynamoDBJson(0),
     "completedLessons": $util.dynamodb.toDynamoDBJson([]),
