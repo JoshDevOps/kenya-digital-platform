@@ -35,27 +35,57 @@ export const CourseProvider = ({ children }) => {
       setLoading(true);
       let userCourses = [];
       
-      // Use CourseService with fallback to sample data
-      if (userAttributes && userAttributes['custom:user_type'] === 'COACH') {
-        // Coaches see all courses (their own + sample data)
-        const instructorCourses = await CourseService.getCoursesByInstructor(currentUser.username);
-        userCourses = [...instructorCourses, ...sampleCourses];
-      } else {
-        // Learners see enrolled courses
-        const enrollments = await CourseService.getUserEnrollments(currentUser.username);
-        const allCourses = [...await CourseService.getAllCourses(), ...sampleCourses];
-        
-        userCourses = enrollments.map(enrollment => 
-          allCourses.find(course => course.id === enrollment.courseId)
-        ).filter(Boolean);
-        
-        // Add sample enrolled courses for demo
-        const sampleEnrolled = sampleEnrollments
-          .filter(e => e.userId === 'current-user')
-          .map(enrollment => sampleCourses.find(course => course.id === enrollment.courseId))
-          .filter(Boolean);
-        
-        userCourses = [...userCourses, ...sampleEnrolled];
+      // Try GraphQL API first, fallback to local data
+      try {
+        if (userAttributes && userAttributes['custom:user_type'] === 'COACH') {
+          // Coaches see all courses
+          const result = await API.graphql(graphqlOperation(LIST_COURSES, { limit: 50 }));
+          const apiCourses = result.data.listCourses.items || [];
+          const localCourses = await CourseService.getCoursesByInstructor(currentUser.username);
+          userCourses = [...apiCourses, ...localCourses, ...sampleCourses];
+        } else {
+          // Learners see enrolled courses
+          const result = await API.graphql(graphqlOperation(GET_USER_ENROLLMENTS, { 
+            userId: currentUser.username 
+          }));
+          const apiEnrollments = result.data.getUserEnrollments || [];
+          const localEnrollments = await CourseService.getUserEnrollments(currentUser.username);
+          
+          // Get courses for all enrollments
+          const allCourses = [...await CourseService.getAllCourses(), ...sampleCourses];
+          const enrolledCourses = [...apiEnrollments, ...localEnrollments].map(enrollment => 
+            allCourses.find(course => course.id === enrollment.courseId)
+          ).filter(Boolean);
+          
+          // Add sample enrolled courses
+          const sampleEnrolled = sampleEnrollments
+            .filter(e => e.userId === 'current-user')
+            .map(enrollment => sampleCourses.find(course => course.id === enrollment.courseId))
+            .filter(Boolean);
+          
+          userCourses = [...enrolledCourses, ...sampleEnrolled];
+        }
+      } catch (apiError) {
+        console.log('GraphQL API error, using local data:', apiError.message);
+        // Fallback to local data
+        if (userAttributes && userAttributes['custom:user_type'] === 'COACH') {
+          const instructorCourses = await CourseService.getCoursesByInstructor(currentUser.username);
+          userCourses = [...instructorCourses, ...sampleCourses];
+        } else {
+          const enrollments = await CourseService.getUserEnrollments(currentUser.username);
+          const allCourses = [...await CourseService.getAllCourses(), ...sampleCourses];
+          
+          userCourses = enrollments.map(enrollment => 
+            allCourses.find(course => course.id === enrollment.courseId)
+          ).filter(Boolean);
+          
+          const sampleEnrolled = sampleEnrollments
+            .filter(e => e.userId === 'current-user')
+            .map(enrollment => sampleCourses.find(course => course.id === enrollment.courseId))
+            .filter(Boolean);
+          
+          userCourses = [...userCourses, ...sampleEnrolled];
+        }
       }
       
       setCourses(userCourses);

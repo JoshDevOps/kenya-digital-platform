@@ -24,6 +24,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ConfirmAccount from './pages/ConfirmAccount';
 import Home from './pages/Home';
 import Courses from './pages/Courses';
+import CourseDetail from './pages/CourseDetail';
 import LearnerDashboard from './pages/LearnerDashboard';
 import LearnerCourses from './pages/LearnerCourses';
 import LearnerProgress from './pages/LearnerProgress';
@@ -136,6 +137,7 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/courses" element={<Courses />} />
+            <Route path="/courses/:courseId" element={<CourseDetail />} />
             <Route path="/login" element={
               <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-200">
                 <div className="max-w-md w-full space-y-8">

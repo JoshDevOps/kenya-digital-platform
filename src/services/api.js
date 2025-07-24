@@ -233,35 +233,13 @@ export const processPayment = async (paymentData) => {
 };
 
 export const getUserPurchases = async (userId) => {
-  const query = `
-    query GetUserPurchases($userId: ID!) {
-      getUserPurchases(userId: $userId) {
-        id
-        transactionId
-        amount
-        currency
-        status
-        paymentMethod
-        phoneNumber
-        purchaseDate
-        video {
-          id
-          title
-        }
-        liveSession {
-          id
-          title
-        }
-      }
-    }
-  `;
-  
+  // Disabled GraphQL API call - using localStorage instead
   try {
-    const response = await API.graphql(graphqlOperation(query, { userId }));
-    return response.data.getUserPurchases;
+    const purchases = JSON.parse(localStorage.getItem('skillbridge_purchases') || '[]');
+    return purchases.filter(purchase => purchase.userId === userId);
   } catch (error) {
     console.error('Error fetching user purchases:', error);
-    throw error;
+    return [];
   }
 };
 

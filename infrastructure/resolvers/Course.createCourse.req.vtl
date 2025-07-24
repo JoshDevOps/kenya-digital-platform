@@ -1,0 +1,24 @@
+{
+  "version": "2017-02-28",
+  "operation": "PutItem",
+  "key": {
+    "id": $util.dynamodb.toDynamoDBJson($util.autoId())
+  },
+  "attributeValues": {
+    "title": $util.dynamodb.toDynamoDBJson($ctx.args.input.title),
+    "description": $util.dynamodb.toDynamoDBJson($ctx.args.input.description),
+    "instructorId": $util.dynamodb.toDynamoDBJson($ctx.identity.username),
+    "price": $util.dynamodb.toDynamoDBJson($ctx.args.input.price),
+    "duration": $util.dynamodb.toDynamoDBJson($ctx.args.input.duration),
+    "level": $util.dynamodb.toDynamoDBJson($ctx.args.input.level),
+    "category": $util.dynamodb.toDynamoDBJson($ctx.args.input.category),
+    "thumbnail": $util.dynamodb.toDynamoDBJson($ctx.args.input.thumbnail),
+    "videoUrl": $util.dynamodb.toDynamoDBJson($ctx.args.input.videoUrl),
+    "materials": $util.dynamodb.toDynamoDBJson($ctx.args.input.materials),
+    "enrollmentCount": $util.dynamodb.toDynamoDBJson(0),
+    "rating": $util.dynamodb.toDynamoDBJson(0),
+    "isPublished": $util.dynamodb.toDynamoDBJson(true),
+    "createdAt": $util.dynamodb.toDynamoDBJson($util.time.nowISO8601()),
+    "updatedAt": $util.dynamodb.toDynamoDBJson($util.time.nowISO8601())
+  }
+}

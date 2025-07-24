@@ -162,6 +162,35 @@ export class SkillBridgeStack extends cdk.Stack {
     const enrollmentsDataSource = api.addDynamoDbDataSource('EnrollmentsDataSource', enrollmentsTable);
     const sessionsDataSource = api.addDynamoDbDataSource('SessionsDataSource', sessionsTable);
 
+    // Resolvers
+    coursesDataSource.createResolver('CreateCourseResolver', {
+      typeName: 'Mutation',
+      fieldName: 'createCourse',
+      requestMappingTemplate: appsync.MappingTemplate.fromFile('resolvers/Course.createCourse.req.vtl'),
+      responseMappingTemplate: appsync.MappingTemplate.fromFile('resolvers/Course.createCourse.res.vtl'),
+    });
+
+    coursesDataSource.createResolver('ListCoursesResolver', {
+      typeName: 'Query',
+      fieldName: 'listCourses',
+      requestMappingTemplate: appsync.MappingTemplate.fromFile('resolvers/Query.listCourses.req.vtl'),
+      responseMappingTemplate: appsync.MappingTemplate.fromFile('resolvers/Query.listCourses.res.vtl'),
+    });
+
+    enrollmentsDataSource.createResolver('EnrollInCourseResolver', {
+      typeName: 'Mutation',
+      fieldName: 'enrollInCourse',
+      requestMappingTemplate: appsync.MappingTemplate.fromFile('resolvers/Mutation.enrollInCourse.req.vtl'),
+      responseMappingTemplate: appsync.MappingTemplate.fromFile('resolvers/Mutation.enrollInCourse.res.vtl'),
+    });
+
+    enrollmentsDataSource.createResolver('GetUserEnrollmentsResolver', {
+      typeName: 'Query',
+      fieldName: 'getUserEnrollments',
+      requestMappingTemplate: appsync.MappingTemplate.fromFile('resolvers/Query.getUserEnrollments.req.vtl'),
+      responseMappingTemplate: appsync.MappingTemplate.fromFile('resolvers/Query.getUserEnrollments.res.vtl'),
+    });
+
     // IAM Roles for Cognito Identity Pool
     const authenticatedRole = new iam.Role(this, 'CognitoDefaultAuthenticatedRole', {
       assumedBy: new iam.FederatedPrincipal('cognito-identity.amazonaws.com', {
