@@ -2,15 +2,17 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { LIST_COURSES, GET_USER_ENROLLMENTS } from '../graphql/queries';
 import { CREATE_COURSE, ENROLL_IN_COURSE } from '../graphql/mutations';
 
-// Course service with localStorage fallback
+// Course service with GraphQL integration
 export const getCoursesByOwner = async (ownerId) => {
   try {
-    // Use localStorage for now
-    const courses = JSON.parse(localStorage.getItem('skillbridge_courses') || '[]');
-    return courses.filter(course => course.instructorId === ownerId);
+    const result = await API.graphql(graphqlOperation(LIST_COURSES, { limit: 100 }));
+    const allCourses = result.data.listCourses.items || [];
+    return allCourses.filter(course => course.instructorId === ownerId);
   } catch (error) {
     console.error('Error fetching courses by owner:', error);
-    return [];
+    // Fallback to localStorage
+    const courses = JSON.parse(localStorage.getItem('skillbridge_courses') || '[]');
+    return courses.filter(course => course.instructorId === ownerId);
   }
 };
 

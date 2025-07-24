@@ -64,10 +64,10 @@ const ContentManagement = () => {
 
   const handleSaveCourse = (courseData) => {
     setCourses([courseData, ...courses]);
-    // Also refresh from context to get latest data
+    // Refresh courses from API
     setTimeout(() => {
       window.location.reload();
-    }, 1000);
+    }, 2000);
   };
 
   const categories = ['all', 'Marketing', 'Development', 'Design', 'Business', 'Content'];

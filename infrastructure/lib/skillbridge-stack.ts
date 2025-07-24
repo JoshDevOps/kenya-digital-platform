@@ -95,6 +95,18 @@ export class SkillBridgeStack extends cdk.Stack {
       supportedIdentityProviders: [
         cognito.UserPoolClientIdentityProvider.COGNITO,
       ],
+      oAuth: {
+        callbackUrls: [
+          `https://${distribution.distributionDomainName}`,
+          `https://${distribution.distributionDomainName}/`,
+          'http://localhost:3000',
+          'http://localhost:3000/'
+        ],
+        logoutUrls: [
+          `https://${distribution.distributionDomainName}`,
+          'http://localhost:3000'
+        ]
+      }
     });
 
     // Cognito Identity Pool

@@ -192,7 +192,7 @@
     "UsernameAttributes": [
      "email"
     ],
-    "UserPoolName": "skillbridge-users",
+    "UserPoolName": "skillbridge-users-v2",
     "VerificationMessageTemplate": {
      "DefaultEmailOption": "CONFIRM_WITH_CODE",
      "EmailMessage": "The verification code to your new account is {####}",
@@ -225,13 +225,60 @@
      "aws.cognito.signin.user.admin"
     ],
     "CallbackURLs": [
-     "https://example.com"
+     {
+      "Fn::Join": [
+       "",
+       [
+        "https://",
+        {
+         "Fn::GetAtt": [
+          "Distribution830FAC52",
+          "DomainName"
+         ]
+        }
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "https://",
+        {
+         "Fn::GetAtt": [
+          "Distribution830FAC52",
+          "DomainName"
+         ]
+        },
+        "/"
+       ]
+      ]
+     },
+     "http://localhost:3000",
+     "http://localhost:3000/"
     ],
     "ExplicitAuthFlows": [
      "ALLOW_ADMIN_USER_PASSWORD_AUTH",
      "ALLOW_CUSTOM_AUTH",
      "ALLOW_USER_SRP_AUTH",
      "ALLOW_REFRESH_TOKEN_AUTH"
+    ],
+    "LogoutURLs": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "https://",
+        {
+         "Fn::GetAtt": [
+          "Distribution830FAC52",
+          "DomainName"
+         ]
+        }
+       ]
+      ]
+     },
+     "http://localhost:3000"
     ],
     "SupportedIdentityProviders": [
      "COGNITO"

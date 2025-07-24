@@ -170,11 +170,6 @@ const CourseCreator = ({ onClose, onCourseCreated }) => {
       onCourseCreated && onCourseCreated(savedCourse);
       onClose && onClose();
       
-      // Refresh the page to show the new course
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
-      
     } catch (error) {
       console.error('Error creating course:', error);
       alert('Failed to create course: ' + error.message);

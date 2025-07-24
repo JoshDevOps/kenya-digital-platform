@@ -272,7 +272,7 @@
                     "usernameAttributes": [
                       "email"
                     ],
-                    "userPoolName": "skillbridge-users",
+                    "userPoolName": "skillbridge-users-v2",
                     "verificationMessageTemplate": {
                       "defaultEmailOption": "CONFIRM_WITH_CODE",
                       "emailMessage": "The verification code to your new account is {####}",
@@ -318,13 +318,60 @@
                       "aws.cognito.signin.user.admin"
                     ],
                     "callbackUrLs": [
-                      "https://example.com"
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "https://",
+                            {
+                              "Fn::GetAtt": [
+                                "Distribution830FAC52",
+                                "DomainName"
+                              ]
+                            }
+                          ]
+                        ]
+                      },
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "https://",
+                            {
+                              "Fn::GetAtt": [
+                                "Distribution830FAC52",
+                                "DomainName"
+                              ]
+                            },
+                            "/"
+                          ]
+                        ]
+                      },
+                      "http://localhost:3000",
+                      "http://localhost:3000/"
                     ],
                     "explicitAuthFlows": [
                       "ALLOW_ADMIN_USER_PASSWORD_AUTH",
                       "ALLOW_CUSTOM_AUTH",
                       "ALLOW_USER_SRP_AUTH",
                       "ALLOW_REFRESH_TOKEN_AUTH"
+                    ],
+                    "logoutUrLs": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "https://",
+                            {
+                              "Fn::GetAtt": [
+                                "Distribution830FAC52",
+                                "DomainName"
+                              ]
+                            }
+                          ]
+                        ]
+                      },
+                      "http://localhost:3000"
                     ],
                     "supportedIdentityProviders": [
                       "COGNITO"
