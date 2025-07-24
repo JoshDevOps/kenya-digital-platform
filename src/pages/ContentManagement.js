@@ -3,58 +3,10 @@ import { Plus, Search, Filter, Edit, Trash2, Eye, Play, DollarSign, Users, Calen
 import CourseCreator from '../components/CourseCreator';
 import { CourseService } from '../services/courseService';
 import { useAuth } from '../contexts/AuthContext';
+import { useCourses } from '../contexts/CourseContext';
 
 const ContentManagement = () => {
-  const [courses, setCourses] = useState([
-    {
-      id: 1,
-      title: 'Digital Marketing Fundamentals',
-      description: 'Complete guide to digital marketing strategies and implementation.',
-      thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300&h=200&fit=crop',
-      category: 'Marketing',
-      price: 99,
-      students: 45,
-      lessons: 12,
-      duration: '8 hours',
-      status: 'published',
-      rating: 4.8,
-      revenue: 4455,
-      createdAt: '2024-01-15',
-      lastUpdated: '2024-01-20'
-    },
-    {
-      id: 2,
-      title: 'Advanced Social Media Strategy',
-      description: 'Master social media marketing for business growth.',
-      thumbnail: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=300&h=200&fit=crop',
-      category: 'Marketing',
-      price: 149,
-      students: 32,
-      lessons: 16,
-      duration: '12 hours',
-      status: 'published',
-      rating: 4.6,
-      revenue: 4768,
-      createdAt: '2024-01-10',
-      lastUpdated: '2024-01-18'
-    },
-    {
-      id: 3,
-      title: 'Content Creation Masterclass',
-      description: 'Learn to create engaging content that converts.',
-      thumbnail: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=300&h=200&fit=crop',
-      category: 'Content',
-      price: 79,
-      students: 0,
-      lessons: 10,
-      duration: '6 hours',
-      status: 'draft',
-      rating: 0,
-      revenue: 0,
-      createdAt: '2024-01-22',
-      lastUpdated: '2024-01-22'
-    }
-  ]);
+  const { courses, loading, refreshCourses } = useCourses();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -63,11 +15,8 @@ const ContentManagement = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   const handleSaveCourse = (courseData) => {
-    setCourses([courseData, ...courses]);
-    // Refresh courses from API
-    setTimeout(() => {
-      window.location.reload();
-    }, 2000);
+    // Refresh courses from context
+    refreshCourses();
   };
 
   const categories = ['all', 'Marketing', 'Development', 'Design', 'Business', 'Content'];
@@ -81,16 +30,24 @@ const ContentManagement = () => {
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
-  const handleDeleteCourse = (courseId) => {
+  const handleDeleteCourse = async (courseId) => {
     if (window.confirm('Are you sure you want to delete this course?')) {
-      setCourses(courses.filter(course => course.id !== courseId));
+      try {
+        await CourseService.deleteCourse(courseId);
+        refreshCourses();
+      } catch (error) {
+        alert('Failed to delete course: ' + error.message);
+      }
     }
   };
 
-  const handleStatusChange = (courseId, newStatus) => {
-    setCourses(courses.map(course => 
-      course.id === courseId ? { ...course, status: newStatus } : course
-    ));
+  const handleStatusChange = async (courseId, newStatus) => {
+    try {
+      await CourseService.updateCourse(courseId, { isPublished: newStatus === 'published' });
+      refreshCourses();
+    } catch (error) {
+      alert('Failed to update course status: ' + error.message);
+    }
   };
 
   const getStatusColor = (status) => {
@@ -226,17 +183,28 @@ const ContentManagement = () => {
           </div>
         </div>
 
-        {/* Course Grid/List */}
-        {viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCourses.map((course) => (
-              <div key={course.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-                <img src={course.thumbnail} alt={course.title} className="w-full h-48 object-cover" />
+        {/* Loading State */}
+        {loading ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-2 border-orange-500 border-t-transparent"></div>
+          </div>
+        ) : (
+          <>
+            {/* Course Grid/List */}
+            {viewMode === 'grid' ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredCourses.map((course) => (
+                  <div key={course.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+                    <img 
+                      src={course.thumbnail || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=300&h=200&fit=crop'} 
+                      alt={course.title} 
+                      className="w-full h-48 object-cover" 
+                    />
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm text-orange-600 font-medium">{course.category}</span>
-                    <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(course.status)}`}>
-                      {course.status}
+                    <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(course.isPublished ? 'published' : 'draft')}`}>
+                      {course.isPublished ? 'published' : 'draft'}
                     </span>
                   </div>
                   
@@ -244,14 +212,14 @@ const ContentManagement = () => {
                   <p className="text-sm text-gray-600 mb-4 line-clamp-2">{course.description}</p>
                   
                   <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                    <span>{course.lessons} lessons</span>
-                    <span>{course.duration}</span>
-                    <span>{course.students} students</span>
+                    <span>{course.lessons || 'N/A'} lessons</span>
+                    <span>{course.duration} hours</span>
+                    <span>{course.enrollmentCount || 0} students</span>
                   </div>
                   
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-lg font-bold text-gray-900">${course.price}</span>
-                    <span className="text-sm text-green-600">${course.revenue} earned</span>
+                    <span className="text-sm text-green-600">${course.revenue || 0} earned</span>
                   </div>
                   
                   <div className="flex items-center justify-between">
@@ -340,24 +308,26 @@ const ContentManagement = () => {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {filteredCourses.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-gray-400 mb-4">
-              <Play className="w-16 h-16 mx-auto" />
+          {filteredCourses.length === 0 && (
+            <div className="text-center py-12">
+              <div className="text-gray-400 mb-4">
+                <Play className="w-16 h-16 mx-auto" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No courses found</h3>
+              <p className="text-gray-600 mb-6">Create your first course to get started</p>
+              <button 
+                onClick={() => setShowCreateModal(true)}
+                className="bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 transition-colors"
+              >
+                Create Course
+              </button>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No courses found</h3>
-            <p className="text-gray-600 mb-6">Create your first course to get started</p>
-            <button 
-              onClick={() => setShowCreateModal(true)}
-              className="bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 transition-colors"
-            >
-              Create Course
-            </button>
-          </div>
+          )}
+          </>
         )}
 
         {showCreateModal && (
