@@ -53,26 +53,11 @@ export const CourseProvider = ({ children }) => {
             userCourses = [...apiCourses, ...localCourses, ...sampleCourses];
             console.log('Total courses for coach:', userCourses.length);
         } else {
-          // Learners see enrolled courses
-          const result = await API.graphql(graphqlOperation(GET_USER_ENROLLMENTS, { 
-            userId: currentUser.sub || currentUser.username 
-          }));
-          const apiEnrollments = result.data.getUserEnrollments || [];
-          const localEnrollments = await CourseService.getUserEnrollments(currentUser.username);
-          
-          // Get courses for all enrollments
-          const allCourses = [...await CourseService.getAllCourses(), ...sampleCourses];
-          const enrolledCourses = [...apiEnrollments, ...localEnrollments].map(enrollment => 
-            allCourses.find(course => course.id === enrollment.courseId)
-          ).filter(Boolean);
-          
-          // Add sample enrolled courses
-          const sampleEnrolled = sampleEnrollments
-            .filter(e => e.userId === 'current-user')
-            .map(enrollment => sampleCourses.find(course => course.id === enrollment.courseId))
-            .filter(Boolean);
-          
-          userCourses = [...enrolledCourses, ...sampleEnrolled];
+          // Learners see all available courses
+          const result = await API.graphql(graphqlOperation(LIST_COURSES, { limit: 50 }));
+          const apiCourses = result.data.listCourses.items || [];
+          const localCourses = await CourseService.getAllCourses();
+          userCourses = [...apiCourses, ...localCourses, ...sampleCourses];
         }
         } catch (apiError) {
           console.error('GraphQL API error:', apiError);
@@ -82,19 +67,9 @@ export const CourseProvider = ({ children }) => {
             const instructorCourses = await CourseService.getCoursesByInstructor(currentUser.username);
             userCourses = [...instructorCourses, ...sampleCourses];
           } else {
-            const enrollments = await CourseService.getUserEnrollments(currentUser.username);
-            const allCourses = [...await CourseService.getAllCourses(), ...sampleCourses];
-            
-            userCourses = enrollments.map(enrollment => 
-              allCourses.find(course => course.id === enrollment.courseId)
-            ).filter(Boolean);
-            
-            const sampleEnrolled = sampleEnrollments
-              .filter(e => e.userId === 'current-user')
-              .map(enrollment => sampleCourses.find(course => course.id === enrollment.courseId))
-              .filter(Boolean);
-            
-            userCourses = [...userCourses, ...sampleEnrolled];
+            // Learners see all courses
+            const localCourses = await CourseService.getAllCourses();
+            userCourses = [...localCourses, ...sampleCourses];
           }
         }
       } else {
@@ -104,7 +79,9 @@ export const CourseProvider = ({ children }) => {
           const instructorCourses = await CourseService.getCoursesByInstructor(currentUser.username);
           userCourses = [...instructorCourses, ...sampleCourses];
         } else {
-          userCourses = sampleCourses;
+          // Show all courses for learners
+          const localCourses = await CourseService.getAllCourses();
+          userCourses = [...localCourses, ...sampleCourses];
         }
       }
       
