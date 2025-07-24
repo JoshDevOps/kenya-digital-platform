@@ -166,9 +166,14 @@ const CourseCreator = ({ onClose, onCourseCreated }) => {
         duration: parseInt(courseData.duration) || 1
       });
 
-      alert('Course created successfully!');
+      alert('Course created successfully! The course is now available.');
       onCourseCreated && onCourseCreated(savedCourse);
       onClose && onClose();
+      
+      // Refresh the page to show the new course
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
       
     } catch (error) {
       console.error('Error creating course:', error);

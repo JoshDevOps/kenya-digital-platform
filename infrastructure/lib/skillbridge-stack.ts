@@ -49,7 +49,7 @@ export class SkillBridgeStack extends cdk.Stack {
 
     // Cognito User Pool
     const userPool = new cognito.UserPool(this, 'UserPool', {
-      userPoolName: 'skillbridge-users',
+      userPoolName: 'skillbridge-users-v2',
       selfSignUpEnabled: true,
       signInAliases: {
         email: true,

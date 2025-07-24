@@ -2,12 +2,12 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { LIST_COURSES, GET_USER_ENROLLMENTS } from '../graphql/queries';
 import { CREATE_COURSE, ENROLL_IN_COURSE } from '../graphql/mutations';
 
-// Course service with GraphQL integration
+// Course service with localStorage fallback
 export const getCoursesByOwner = async (ownerId) => {
   try {
-    const result = await API.graphql(graphqlOperation(LIST_COURSES, { limit: 100 }));
-    const allCourses = result.data.listCourses.items || [];
-    return allCourses.filter(course => course.instructorId === ownerId);
+    // Use localStorage for now
+    const courses = JSON.parse(localStorage.getItem('skillbridge_courses') || '[]');
+    return courses.filter(course => course.instructorId === ownerId);
   } catch (error) {
     console.error('Error fetching courses by owner:', error);
     return [];
@@ -16,9 +16,9 @@ export const getCoursesByOwner = async (ownerId) => {
 
 export const getCourseDetails = async (courseId) => {
   try {
-    const result = await API.graphql(graphqlOperation(LIST_COURSES, { limit: 100 }));
-    const allCourses = result.data.listCourses.items || [];
-    return allCourses.find(course => course.id === courseId);
+    // Use localStorage for now
+    const courses = JSON.parse(localStorage.getItem('skillbridge_courses') || '[]');
+    return courses.find(course => course.id === courseId);
   } catch (error) {
     console.error('Error fetching course details:', error);
     return null;
@@ -27,9 +27,9 @@ export const getCourseDetails = async (courseId) => {
 
 export const getUserCourseProgress = async (userId, courseId) => {
   try {
-    const result = await API.graphql(graphqlOperation(GET_USER_ENROLLMENTS, { userId }));
-    const enrollments = result.data.getUserEnrollments || [];
-    return enrollments.find(enrollment => enrollment.courseId === courseId);
+    // Use localStorage for now
+    const enrollments = JSON.parse(localStorage.getItem('skillbridge_enrollments') || '[]');
+    return enrollments.find(enrollment => enrollment.userId === userId && enrollment.courseId === courseId);
   } catch (error) {
     console.error('Error fetching course progress:', error);
     return null;
