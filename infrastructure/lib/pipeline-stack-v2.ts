@@ -4,6 +4,7 @@ import * as codepipelineActions from 'aws-cdk-lib/aws-codepipeline-actions';
 import * as codebuild from 'aws-cdk-lib/aws-codebuild';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import { Construct } from 'constructs';
 
 export class PipelineStackV2 extends cdk.Stack {
@@ -51,6 +52,38 @@ export class PipelineStackV2 extends cdk.Stack {
       }),
     });
 
+    // CloudFront invalidation project
+    const invalidationProject = new codebuild.Project(this, 'InvalidationProject', {
+      projectName: 'skillbridge-invalidation',
+      environment: {
+        buildImage: codebuild.LinuxBuildImage.STANDARD_5_0,
+        computeType: codebuild.ComputeType.SMALL,
+      },
+      buildSpec: codebuild.BuildSpec.fromObject({
+        version: '0.2',
+        phases: {
+          build: {
+            commands: [
+              'echo Invalidating CloudFront distribution...',
+              'aws cloudfront create-invalidation --distribution-id E1DS1COOLRRFVV --paths "/*"',
+              'echo CloudFront invalidation completed',
+            ],
+          },
+        },
+      }),
+    });
+
+    // Grant CloudFront permissions to invalidation project
+    invalidationProject.addToRolePolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        'cloudfront:CreateInvalidation',
+        'cloudfront:GetInvalidation',
+        'cloudfront:ListInvalidations'
+      ],
+      resources: ['*'],
+    }));
+
     // CodePipeline with CodeStar connection
     const sourceOutput = new codepipeline.Artifact();
     const buildOutput = new codepipeline.Artifact();
@@ -90,6 +123,16 @@ export class PipelineStackV2 extends cdk.Stack {
               actionName: 'S3Deploy',
               bucket: s3.Bucket.fromBucketName(this, 'WebsiteBucket', `skillbridge-web-${this.account}`),
               input: buildOutput,
+            }),
+          ],
+        },
+        {
+          stageName: 'Invalidate',
+          actions: [
+            new codepipelineActions.CodeBuildAction({
+              actionName: 'CloudFrontInvalidation',
+              project: invalidationProject,
+              input: sourceOutput,
             }),
           ],
         },

@@ -178,6 +178,172 @@
     "aws:cdk:path": "SkillBridgePipelineStack/BuildProject/Resource"
    }
   },
+  "InvalidationProjectRole83477856": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "codebuild.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgePipelineStack/InvalidationProject/Role/Resource"
+   }
+  },
+  "InvalidationProjectRoleDefaultPolicyC197D6A0": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:logs:us-east-1:637423178245:log-group:/aws/codebuild/",
+           {
+            "Ref": "InvalidationProjectA7ACD5D2"
+           },
+           ":*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:logs:us-east-1:637423178245:log-group:/aws/codebuild/",
+           {
+            "Ref": "InvalidationProjectA7ACD5D2"
+           }
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "codebuild:BatchPutCodeCoverages",
+        "codebuild:BatchPutTestCases",
+        "codebuild:CreateReport",
+        "codebuild:CreateReportGroup",
+        "codebuild:UpdateReport"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:aws:codebuild:us-east-1:637423178245:report-group/",
+          {
+           "Ref": "InvalidationProjectA7ACD5D2"
+          },
+          "-*"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": [
+        "cloudfront:CreateInvalidation",
+        "cloudfront:GetInvalidation",
+        "cloudfront:ListInvalidations"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ArtifactsBucket2AAC5544",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ArtifactsBucket2AAC5544",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "InvalidationProjectRoleDefaultPolicyC197D6A0",
+    "Roles": [
+     {
+      "Ref": "InvalidationProjectRole83477856"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgePipelineStack/InvalidationProject/Role/DefaultPolicy/Resource"
+   }
+  },
+  "InvalidationProjectA7ACD5D2": {
+   "Type": "AWS::CodeBuild::Project",
+   "Properties": {
+    "Artifacts": {
+     "Type": "NO_ARTIFACTS"
+    },
+    "Environment": {
+     "ComputeType": "BUILD_GENERAL1_SMALL",
+     "Image": "aws/codebuild/standard:5.0",
+     "ImagePullCredentialsType": "CODEBUILD",
+     "PrivilegedMode": false,
+     "Type": "LINUX_CONTAINER"
+    },
+    "ServiceRole": {
+     "Fn::GetAtt": [
+      "InvalidationProjectRole83477856",
+      "Arn"
+     ]
+    },
+    "Source": {
+     "BuildSpec": "{\n  \"version\": \"0.2\",\n  \"phases\": {\n    \"build\": {\n      \"commands\": [\n        \"echo Invalidating CloudFront distribution...\",\n        \"aws cloudfront create-invalidation --distribution-id E1DS1COOLRRFVV --paths \\\"/*\\\"\",\n        \"echo CloudFront invalidation completed\"\n      ]\n    }\n  }\n}",
+     "Type": "NO_SOURCE"
+    },
+    "Cache": {
+     "Type": "NO_CACHE"
+    },
+    "EncryptionKey": "alias/aws/s3",
+    "Name": "skillbridge-invalidation"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgePipelineStack/InvalidationProject/Resource"
+   }
+  },
   "PipelineRoleD68726F7": {
    "Type": "AWS::IAM::Role",
    "Properties": {
@@ -253,6 +419,12 @@
         {
          "Fn::GetAtt": [
           "PipelineDeployS3DeployCodePipelineActionRole90584DAF",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "PipelineInvalidateCloudFrontInvalidationCodePipelineActionRole349B5C0A",
           "Arn"
          ]
         }
@@ -374,6 +546,37 @@
        }
       ],
       "Name": "Deploy"
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Build",
+         "Owner": "AWS",
+         "Provider": "CodeBuild",
+         "Version": "1"
+        },
+        "Configuration": {
+         "ProjectName": {
+          "Ref": "InvalidationProjectA7ACD5D2"
+         }
+        },
+        "InputArtifacts": [
+         {
+          "Name": "Artifact_Source_GitHub_Source"
+         }
+        ],
+        "Name": "CloudFrontInvalidation",
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "PipelineInvalidateCloudFrontInvalidationCodePipelineActionRole349B5C0A",
+          "Arn"
+         ]
+        },
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Invalidate"
      }
     ],
     "ArtifactStore": {
@@ -552,6 +755,59 @@
    },
    "Metadata": {
     "aws:cdk:path": "SkillBridgePipelineStack/Pipeline/Deploy/S3Deploy/CodePipelineActionRole/DefaultPolicy/Resource"
+   }
+  },
+  "PipelineInvalidateCloudFrontInvalidationCodePipelineActionRole349B5C0A": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": "arn:aws:iam::637423178245:root"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgePipelineStack/Pipeline/Invalidate/CloudFrontInvalidation/CodePipelineActionRole/Resource"
+   }
+  },
+  "PipelineInvalidateCloudFrontInvalidationCodePipelineActionRoleDefaultPolicyF78BE638": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "codebuild:BatchGetBuilds",
+        "codebuild:StartBuild",
+        "codebuild:StopBuild"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "InvalidationProjectA7ACD5D2",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "PipelineInvalidateCloudFrontInvalidationCodePipelineActionRoleDefaultPolicyF78BE638",
+    "Roles": [
+     {
+      "Ref": "PipelineInvalidateCloudFrontInvalidationCodePipelineActionRole349B5C0A"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillBridgePipelineStack/Pipeline/Invalidate/CloudFrontInvalidation/CodePipelineActionRole/DefaultPolicy/Resource"
    }
   },
   "CDKMetadata": {

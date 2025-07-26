@@ -68,6 +68,38 @@ export class PipelineStack extends cdk.Stack {
       ],
     }));
 
+    // CloudFront invalidation project
+    const invalidationProject = new codebuild.Project(this, 'InvalidationProject', {
+      projectName: 'skillbridge-invalidation',
+      environment: {
+        buildImage: codebuild.LinuxBuildImage.STANDARD_5_0,
+        computeType: codebuild.ComputeType.SMALL,
+      },
+      buildSpec: codebuild.BuildSpec.fromObject({
+        version: '0.2',
+        phases: {
+          build: {
+            commands: [
+              'echo Invalidating CloudFront distribution...',
+              'aws cloudfront create-invalidation --distribution-id E1DS1COOLRRFVV --paths "/*"',
+              'echo CloudFront invalidation completed',
+            ],
+          },
+        },
+      }),
+    });
+
+    // Grant CloudFront permissions to invalidation project
+    invalidationProject.addToRolePolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        'cloudfront:CreateInvalidation',
+        'cloudfront:GetInvalidation',
+        'cloudfront:ListInvalidations'
+      ],
+      resources: ['*'],
+    }));
+
     // CodePipeline
     const sourceOutput = new codepipeline.Artifact();
     const buildOutput = new codepipeline.Artifact();
@@ -107,6 +139,16 @@ export class PipelineStack extends cdk.Stack {
               actionName: 'S3Deploy',
               bucket: s3.Bucket.fromBucketName(this, 'WebsiteBucket', `skillbridge-web-${this.account}`),
               input: buildOutput,
+            }),
+          ],
+        },
+        {
+          stageName: 'Invalidate',
+          actions: [
+            new codepipelineActions.CodeBuildAction({
+              actionName: 'CloudFrontInvalidation',
+              project: invalidationProject,
+              input: sourceOutput,
             }),
           ],
         },

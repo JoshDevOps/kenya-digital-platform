@@ -1887,6 +1887,225 @@
               "version": "2.87.0"
             }
           },
+          "InvalidationProject": {
+            "id": "InvalidationProject",
+            "path": "SkillBridgePipelineStack/InvalidationProject",
+            "children": {
+              "Role": {
+                "id": "Role",
+                "path": "SkillBridgePipelineStack/InvalidationProject/Role",
+                "children": {
+                  "ImportRole": {
+                    "id": "ImportRole",
+                    "path": "SkillBridgePipelineStack/InvalidationProject/Role/ImportRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.87.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "SkillBridgePipelineStack/InvalidationProject/Role/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "codebuild.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.87.0"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "SkillBridgePipelineStack/InvalidationProject/Role/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "SkillBridgePipelineStack/InvalidationProject/Role/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:aws:logs:us-east-1:637423178245:log-group:/aws/codebuild/",
+                                          {
+                                            "Ref": "InvalidationProjectA7ACD5D2"
+                                          },
+                                          ":*"
+                                        ]
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:aws:logs:us-east-1:637423178245:log-group:/aws/codebuild/",
+                                          {
+                                            "Ref": "InvalidationProjectA7ACD5D2"
+                                          }
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Action": [
+                                    "codebuild:BatchPutCodeCoverages",
+                                    "codebuild:BatchPutTestCases",
+                                    "codebuild:CreateReport",
+                                    "codebuild:CreateReportGroup",
+                                    "codebuild:UpdateReport"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:aws:codebuild:us-east-1:637423178245:report-group/",
+                                        {
+                                          "Ref": "InvalidationProjectA7ACD5D2"
+                                        },
+                                        "-*"
+                                      ]
+                                    ]
+                                  }
+                                },
+                                {
+                                  "Action": [
+                                    "cloudfront:CreateInvalidation",
+                                    "cloudfront:GetInvalidation",
+                                    "cloudfront:ListInvalidations"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                },
+                                {
+                                  "Action": [
+                                    "s3:GetBucket*",
+                                    "s3:GetObject*",
+                                    "s3:List*"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "ArtifactsBucket2AAC5544",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "ArtifactsBucket2AAC5544",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "InvalidationProjectRoleDefaultPolicyC197D6A0",
+                            "roles": [
+                              {
+                                "Ref": "InvalidationProjectRole83477856"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.87.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.87.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.87.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "SkillBridgePipelineStack/InvalidationProject/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CodeBuild::Project",
+                  "aws:cdk:cloudformation:props": {
+                    "artifacts": {
+                      "type": "NO_ARTIFACTS"
+                    },
+                    "environment": {
+                      "type": "LINUX_CONTAINER",
+                      "image": "aws/codebuild/standard:5.0",
+                      "imagePullCredentialsType": "CODEBUILD",
+                      "privilegedMode": false,
+                      "computeType": "BUILD_GENERAL1_SMALL"
+                    },
+                    "serviceRole": {
+                      "Fn::GetAtt": [
+                        "InvalidationProjectRole83477856",
+                        "Arn"
+                      ]
+                    },
+                    "source": {
+                      "type": "NO_SOURCE",
+                      "buildSpec": "{\n  \"version\": \"0.2\",\n  \"phases\": {\n    \"build\": {\n      \"commands\": [\n        \"echo Invalidating CloudFront distribution...\",\n        \"aws cloudfront create-invalidation --distribution-id E1DS1COOLRRFVV --paths \\\"/*\\\"\",\n        \"echo CloudFront invalidation completed\"\n      ]\n    }\n  }\n}"
+                    },
+                    "cache": {
+                      "type": "NO_CACHE"
+                    },
+                    "encryptionKey": "alias/aws/s3",
+                    "name": "skillbridge-invalidation"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_codebuild.CfnProject",
+                  "version": "2.87.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_codebuild.Project",
+              "version": "2.87.0"
+            }
+          },
           "WebsiteBucket": {
             "id": "WebsiteBucket",
             "path": "SkillBridgePipelineStack/WebsiteBucket",
@@ -1998,6 +2217,12 @@
                                     {
                                       "Fn::GetAtt": [
                                         "PipelineDeployS3DeployCodePipelineActionRole90584DAF",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::GetAtt": [
+                                        "PipelineInvalidateCloudFrontInvalidationCodePipelineActionRole349B5C0A",
                                         "Arn"
                                       ]
                                     }
@@ -2131,6 +2356,37 @@
                             "roleArn": {
                               "Fn::GetAtt": [
                                 "PipelineDeployS3DeployCodePipelineActionRole90584DAF",
+                                "Arn"
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Invalidate",
+                        "actions": [
+                          {
+                            "name": "CloudFrontInvalidation",
+                            "inputArtifacts": [
+                              {
+                                "name": "Artifact_Source_GitHub_Source"
+                              }
+                            ],
+                            "actionTypeId": {
+                              "category": "Build",
+                              "version": "1",
+                              "owner": "AWS",
+                              "provider": "CodeBuild"
+                            },
+                            "configuration": {
+                              "ProjectName": {
+                                "Ref": "InvalidationProjectA7ACD5D2"
+                              }
+                            },
+                            "runOrder": 1,
+                            "roleArn": {
+                              "Fn::GetAtt": [
+                                "PipelineInvalidateCloudFrontInvalidationCodePipelineActionRole349B5C0A",
                                 "Arn"
                               ]
                             }
@@ -2422,6 +2678,117 @@
                                     "roles": [
                                       {
                                         "Ref": "PipelineDeployS3DeployCodePipelineActionRole90584DAF"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                                  "version": "2.87.0"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.Policy",
+                              "version": "2.87.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Role",
+                          "version": "2.87.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "constructs.Construct",
+                      "version": "10.4.2"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.4.2"
+                }
+              },
+              "Invalidate": {
+                "id": "Invalidate",
+                "path": "SkillBridgePipelineStack/Pipeline/Invalidate",
+                "children": {
+                  "CloudFrontInvalidation": {
+                    "id": "CloudFrontInvalidation",
+                    "path": "SkillBridgePipelineStack/Pipeline/Invalidate/CloudFrontInvalidation",
+                    "children": {
+                      "CodePipelineActionRole": {
+                        "id": "CodePipelineActionRole",
+                        "path": "SkillBridgePipelineStack/Pipeline/Invalidate/CloudFrontInvalidation/CodePipelineActionRole",
+                        "children": {
+                          "ImportCodePipelineActionRole": {
+                            "id": "ImportCodePipelineActionRole",
+                            "path": "SkillBridgePipelineStack/Pipeline/Invalidate/CloudFrontInvalidation/CodePipelineActionRole/ImportCodePipelineActionRole",
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.Resource",
+                              "version": "2.87.0"
+                            }
+                          },
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "SkillBridgePipelineStack/Pipeline/Invalidate/CloudFrontInvalidation/CodePipelineActionRole/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                              "aws:cdk:cloudformation:props": {
+                                "assumeRolePolicyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": "sts:AssumeRole",
+                                      "Effect": "Allow",
+                                      "Principal": {
+                                        "AWS": "arn:aws:iam::637423178245:root"
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                              "version": "2.87.0"
+                            }
+                          },
+                          "DefaultPolicy": {
+                            "id": "DefaultPolicy",
+                            "path": "SkillBridgePipelineStack/Pipeline/Invalidate/CloudFrontInvalidation/CodePipelineActionRole/DefaultPolicy",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "SkillBridgePipelineStack/Pipeline/Invalidate/CloudFrontInvalidation/CodePipelineActionRole/DefaultPolicy/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                                  "aws:cdk:cloudformation:props": {
+                                    "policyDocument": {
+                                      "Statement": [
+                                        {
+                                          "Action": [
+                                            "codebuild:BatchGetBuilds",
+                                            "codebuild:StartBuild",
+                                            "codebuild:StopBuild"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": {
+                                            "Fn::GetAtt": [
+                                              "InvalidationProjectA7ACD5D2",
+                                              "Arn"
+                                            ]
+                                          }
+                                        }
+                                      ],
+                                      "Version": "2012-10-17"
+                                    },
+                                    "policyName": "PipelineInvalidateCloudFrontInvalidationCodePipelineActionRoleDefaultPolicyF78BE638",
+                                    "roles": [
+                                      {
+                                        "Ref": "PipelineInvalidateCloudFrontInvalidationCodePipelineActionRole349B5C0A"
                                       }
                                     ]
                                   }

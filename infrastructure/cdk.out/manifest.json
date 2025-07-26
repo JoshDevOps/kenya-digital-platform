@@ -324,7 +324,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::637423178245:role/cdk-hnb659fds-deploy-role-637423178245-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::637423178245:role/cdk-hnb659fds-cfn-exec-role-637423178245-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-637423178245-us-east-1/b184f44c37204ada0068bf9ef0a8639d7ebc3ab4b7bfd5bd88be4b6ab2f5f709.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-637423178245-us-east-1/54046619274ea66e2d3692fa9def9dec18f7146f450103c554bed0563d25083a.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -362,6 +362,24 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "BuildProject097C5DB7"
+          }
+        ],
+        "/SkillBridgePipelineStack/InvalidationProject/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "InvalidationProjectRole83477856"
+          }
+        ],
+        "/SkillBridgePipelineStack/InvalidationProject/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "InvalidationProjectRoleDefaultPolicyC197D6A0"
+          }
+        ],
+        "/SkillBridgePipelineStack/InvalidationProject/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "InvalidationProjectA7ACD5D2"
           }
         ],
         "/SkillBridgePipelineStack/Pipeline/Role/Resource": [
@@ -410,6 +428,18 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "PipelineDeployS3DeployCodePipelineActionRoleDefaultPolicy4D4CD095"
+          }
+        ],
+        "/SkillBridgePipelineStack/Pipeline/Invalidate/CloudFrontInvalidation/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineInvalidateCloudFrontInvalidationCodePipelineActionRole349B5C0A"
+          }
+        ],
+        "/SkillBridgePipelineStack/Pipeline/Invalidate/CloudFrontInvalidation/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineInvalidateCloudFrontInvalidationCodePipelineActionRoleDefaultPolicyF78BE638"
           }
         ],
         "/SkillBridgePipelineStack/PipelineName": [
