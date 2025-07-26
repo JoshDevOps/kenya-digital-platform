@@ -36,6 +36,8 @@ import Phase2Features from './pages/Phase2Features';
 import AIHub from './pages/AIHub';
 import Phase3Features from './pages/Phase3Features';
 import AIContentCreator from './pages/AIContentCreator';
+import About from './pages/About';
+import Pricing from './pages/Pricing';
 
 
 // Protected route component
@@ -140,6 +142,8 @@ function AppContent() {
             <Route path="/" element={<Home />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/courses/:courseId" element={<CourseDetail />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/pricing" element={<Pricing />} />
             <Route path="/login" element={
               <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-200">
                 <div className="max-w-md w-full space-y-8">
