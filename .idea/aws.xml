@@ -15,7 +15,7 @@
     </option>
   </component>
   <component name="connectionManager">
-    <option name="activeConnectionId" value="AwsConnectionManagerConnection" />
+    <option name="activeConnectionId" value="sso-session:d-9066304c28" />
   </component>
   <component name="explorerToolWindow">
     <option name="selectedTab" value="Explorer" />
