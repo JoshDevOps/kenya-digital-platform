@@ -1,21 +1,138 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Play, Users, Award, BookOpen, ArrowRight, CheckCircle } from 'lucide-react';
+import { Play, Users, Award, BookOpen, ArrowRight, CheckCircle, Search, ChevronDown, Menu, X } from 'lucide-react';
 
 const Home = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [coursesDropdownOpen, setCoursesDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200/50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <div className="text-2xl font-bold text-orange-600">
-              SkillBridge
+            {/* Logo */}
+            <div className="flex items-center">
+              <div className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                SkillBridge
+              </div>
             </div>
-            <Link to="/login" className="bg-orange-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-orange-700 transition-colors">
-              Sign In
-            </Link>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-8">
+              {/* Search Bar */}
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search courses..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="block w-64 pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                />
+              </div>
+
+              {/* Courses Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setCoursesDropdownOpen(!coursesDropdownOpen)}
+                  className="flex items-center text-gray-700 hover:text-purple-600 font-medium transition-colors"
+                >
+                  Courses
+                  <ChevronDown className="ml-1 h-4 w-4" />
+                </button>
+                {coursesDropdownOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
+                    <Link to="/courses" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
+                      All Courses
+                    </Link>
+                    <Link to="/courses?category=development" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
+                      Web Development
+                    </Link>
+                    <Link to="/courses?category=design" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
+                      UI/UX Design
+                    </Link>
+                    <Link to="/courses?category=marketing" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
+                      Digital Marketing
+                    </Link>
+                    <Link to="/courses?category=data" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600">
+                      Data Science
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              <Link to="/about" className="text-gray-700 hover:text-purple-600 font-medium transition-colors">
+                About
+              </Link>
+              <Link to="/pricing" className="text-gray-700 hover:text-purple-600 font-medium transition-colors">
+                Pricing
+              </Link>
+            </nav>
+
+            {/* Auth Buttons */}
+            <div className="hidden md:flex items-center space-x-4">
+              <Link to="/login" className="text-gray-700 hover:text-purple-600 font-medium transition-colors">
+                Sign In
+              </Link>
+              <Link to="/register" className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 transform hover:scale-105">
+                Get Started
+              </Link>
+            </div>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="text-gray-700 hover:text-purple-600 transition-colors"
+              >
+                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+            </div>
           </div>
+
+          {/* Mobile Navigation */}
+          {mobileMenuOpen && (
+            <div className="md:hidden border-t border-gray-200 py-4">
+              {/* Mobile Search */}
+              <div className="relative mb-4">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search courses..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Link to="/courses" className="block px-3 py-2 text-gray-700 hover:text-purple-600 font-medium">
+                  All Courses
+                </Link>
+                <Link to="/about" className="block px-3 py-2 text-gray-700 hover:text-purple-600 font-medium">
+                  About
+                </Link>
+                <Link to="/pricing" className="block px-3 py-2 text-gray-700 hover:text-purple-600 font-medium">
+                  Pricing
+                </Link>
+                <div className="border-t border-gray-200 pt-2 mt-2">
+                  <Link to="/login" className="block px-3 py-2 text-gray-700 hover:text-purple-600 font-medium">
+                    Sign In
+                  </Link>
+                  <Link to="/register" className="block px-3 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold text-center">
+                    Get Started
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
