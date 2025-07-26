@@ -105,7 +105,7 @@ const EnrollmentButton = ({ course, onEnrollmentChange }) => {
     return (
       <button
         onClick={() => window.location.href = '/login'}
-        className="w-full bg-blue-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 transition-colors flex items-center justify-center"
+        className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 flex items-center justify-center transform hover:scale-105"
       >
         <ShoppingCart className="w-5 h-5 mr-2" />
         Login to Enroll
@@ -117,7 +117,7 @@ const EnrollmentButton = ({ course, onEnrollmentChange }) => {
     return (
       <button
         onClick={handleEnroll}
-        className="w-full bg-green-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center justify-center"
+        className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white py-3 px-6 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 flex items-center justify-center"
       >
         <CheckCircle className="w-5 h-5 mr-2" />
         Access Course
@@ -129,7 +129,7 @@ const EnrollmentButton = ({ course, onEnrollmentChange }) => {
     <button
       onClick={handleEnroll}
       disabled={loading}
-      className="w-full bg-orange-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-orange-600 disabled:opacity-50 transition-colors flex items-center justify-center"
+      className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 transition-all duration-300 flex items-center justify-center transform hover:scale-105"
     >
       {loading ? (
         <>

@@ -5,8 +5,8 @@
 /* Custom background pattern */
 .bg-grid-pattern {
   background-image: 
-    linear-gradient(rgba(251, 146, 60, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(251, 146, 60, 0.1) 1px, transparent 1px);
+    linear-gradient(rgba(147, 51, 234, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 51, 234, 0.1) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
@@ -16,16 +16,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #1e293b;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ea580c;
+  background: linear-gradient(135deg, #9333ea, #3b82f6);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #dc2626;
+  background: linear-gradient(135deg, #7c3aed, #2563eb);
 }
 
 /* Smooth transitions */
@@ -36,5 +36,5 @@
 /* Focus styles */
 input:focus, select:focus, textarea:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.1);
+  box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
 }
