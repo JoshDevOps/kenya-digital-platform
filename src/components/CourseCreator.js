@@ -1,14 +1,23 @@
 import React, { useState } from 'react';
 import { Storage, API, graphqlOperation } from 'aws-amplify';
 import { CREATE_COURSE } from '../graphql/mutations';
-import { Upload, Video, FileText, DollarSign, Save, X } from 'lucide-react';
+import { Upload, Video, FileText, DollarSign, Save, X, Eye, CheckCircle } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { useAuth } from '../contexts/AuthContext';
+import DragDropUpload from './DragDropUpload';
 
 const CourseCreator = ({ onClose, onCourseCreated }) => {
   const { currentUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({});
+  const [currentStep, setCurrentStep] = useState(1);
+  const [previewMode, setPreviewMode] = useState(false);
+  
+  const steps = [
+    { id: 1, name: 'Basic Info', icon: FileText },
+    { id: 2, name: 'Content', icon: Video },
+    { id: 3, name: 'Preview', icon: Eye }
+  ];
   
   const [courseData, setCourseData] = useState({
     title: '',
@@ -181,14 +190,47 @@ const CourseCreator = ({ onClose, onCourseCreated }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-gray-900">Create New Course</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
-          >
-            <X className="w-6 h-6" />
-          </button>
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">Create New Course</h2>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+          
+          {/* Progress Steps */}
+          <div className="flex items-center justify-center space-x-8">
+            {steps.map((step, index) => {
+              const Icon = step.icon;
+              const isActive = currentStep === step.id;
+              const isCompleted = currentStep > step.id;
+              
+              return (
+                <div key={step.id} className="flex items-center">
+                  <div className={`flex items-center justify-center w-10 h-10 rounded-full ${
+                    isCompleted ? 'bg-green-500 text-white' :
+                    isActive ? 'bg-orange-500 text-white' :
+                    'bg-gray-200 text-gray-500'
+                  }`}>
+                    {isCompleted ? <CheckCircle className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
+                  </div>
+                  <span className={`ml-2 text-sm font-medium ${
+                    isActive ? 'text-orange-600' : 'text-gray-500'
+                  }`}>
+                    {step.name}
+                  </span>
+                  {index < steps.length - 1 && (
+                    <div className={`w-16 h-0.5 ml-4 ${
+                      isCompleted ? 'bg-green-500' : 'bg-gray-200'
+                    }`} />
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">

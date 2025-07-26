@@ -2,17 +2,27 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { DollarSign, Users, BookOpen, TrendingUp, Calendar, Eye, Edit, Plus, BarChart3, PieChart } from 'lucide-react';
 import PaymentSplitCalculator from '../components/PaymentSplitCalculator';
+import { useCourses } from '../contexts/CourseContext';
 
 const CoachDashboard = () => {
+  const { courses, loading } = useCourses();
   const [selectedPeriod, setSelectedPeriod] = useState('30');
 
-  // Mock data for coach analytics
+  // Calculate real stats from courses
+  const realStats = {
+    totalRevenue: courses.reduce((sum, course) => sum + ((course.price || 0) * (course.enrollmentCount || 0)), 0),
+    totalStudents: courses.reduce((sum, course) => sum + (course.enrollmentCount || 0), 0),
+    activeCourses: courses.filter(course => course.isPublished).length,
+    draftCourses: courses.filter(course => !course.isPublished).length,
+    avgRating: courses.length > 0 ? 
+      (courses.reduce((sum, course) => sum + (course.rating || 0), 0) / courses.length).toFixed(1) : 0
+  };
+
+  // Mock data for additional analytics
   const stats = {
-    totalRevenue: 12450,
-    grossRevenue: 14647, // Before platform commission
-    platformFees: 2197, // 15% commission
-    totalStudents: 156,
-    activeCourses: 8,
+    ...realStats,
+    grossRevenue: realStats.totalRevenue * 1.18, // Before platform commission
+    platformFees: realStats.totalRevenue * 0.18, // 18% commission
     completionRate: 78
   };
 
@@ -25,7 +35,7 @@ const CoachDashboard = () => {
     { month: 'Jun', revenue: 3800 }
   ];
 
-  const courses = [
+  const mockCourses = [
     {
       id: 1,
       title: 'Digital Marketing Fundamentals',
@@ -144,7 +154,7 @@ const CoachDashboard = () => {
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Active Courses</p>
                 <p className="text-2xl font-bold text-gray-900">{stats.activeCourses}</p>
-                <p className="text-sm text-purple-600">2 in draft</p>
+                <p className="text-sm text-purple-600">{stats.draftCourses} in draft</p>
               </div>
             </div>
           </div>
@@ -207,7 +217,7 @@ const CoachDashboard = () => {
               <Link to="/content" className="text-orange-600 hover:text-orange-700 font-medium">View All</Link>
             </div>
             <div className="space-y-4">
-              {courses.slice(0, 3).map((course) => (
+              {(courses.length > 0 ? courses : mockCourses).slice(0, 3).map((course) => (
                 <div key={course.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                   <div className="flex items-center">
                     <img src={course.thumbnail} alt={course.title} className="w-12 h-12 rounded-lg object-cover" />
