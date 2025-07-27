@@ -4,15 +4,39 @@
 export class StepFunctionsService {
   static async startCourseCreation(courseData) {
     try {
-      // Mock implementation for development
-      const mockExecutionArn = `arn:aws:states:us-east-1:123456789012:execution:course-creation:${courseData.id}-${Date.now()}`;
+      console.log('StepFunctionsService: Starting course creation workflow');
+      console.log('Course data:', courseData);
+      console.log('Environment variables:', {
+        stateMachineArn: process.env.REACT_APP_COURSE_CREATION_STATE_MACHINE_ARN,
+        region: process.env.REACT_APP_AWS_REGION
+      });
+      
+      // Check if we have the required environment variables
+      if (!process.env.REACT_APP_COURSE_CREATION_STATE_MACHINE_ARN) {
+        console.warn('Step Functions ARN not found, using mock implementation');
+        
+        // Mock implementation for development
+        const mockExecutionArn = `arn:aws:states:us-east-1:123456789012:execution:course-creation:${courseData.id}-${Date.now()}`;
+        
+        console.log('Mock: Starting course creation workflow for:', courseData.title);
+        
+        // Simulate workflow execution
+        setTimeout(() => {
+          console.log('Mock: Course creation workflow completed');
+        }, 3000);
+        
+        return {
+          success: true,
+          executionArn: mockExecutionArn,
+          message: 'Course creation workflow started successfully (Mock - No ARN configured)'
+        };
+      }
+      
+      // In a real implementation, this would use AWS SDK
+      // For now, return mock success
+      const mockExecutionArn = `arn:aws:states:us-east-1:637423178245:execution:course-creation:${courseData.id}-${Date.now()}`;
       
       console.log('Mock: Starting course creation workflow for:', courseData.title);
-      
-      // Simulate workflow execution
-      setTimeout(() => {
-        console.log('Mock: Course creation workflow completed');
-      }, 3000);
       
       return {
         success: true,

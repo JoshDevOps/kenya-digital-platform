@@ -155,12 +155,24 @@ const CourseBuilder = ({ onClose, onCourseCreated }) => {
   };
 
   const isValidForSubmission = () => {
-    return courseData.title && 
+    const isValid = courseData.title && 
            courseData.description && 
            courseData.shortDescription &&
            courseData.thumbnail &&
            courseData.lessons.length > 0 &&
            courseData.lessons.every(lesson => lesson.title && lesson.description);
+    
+    console.log('Validation check:', {
+      title: !!courseData.title,
+      description: !!courseData.description,
+      shortDescription: !!courseData.shortDescription,
+      thumbnail: !!courseData.thumbnail,
+      lessonsCount: courseData.lessons.length,
+      lessonsValid: courseData.lessons.every(lesson => lesson.title && lesson.description),
+      isValid
+    });
+    
+    return isValid;
   };
 
   const saveCourse = async (status = 'draft') => {
@@ -193,14 +205,19 @@ const CourseBuilder = ({ onClose, onCourseCreated }) => {
       };
 
       if (status === 'pending') {
+        console.log('Starting Step Functions workflow for course:', courseToSave);
+        
         // Use Step Functions workflow for course creation and approval
         const workflowResult = await StepFunctionsService.startCourseCreation(courseToSave);
+        
+        console.log('Step Functions workflow result:', workflowResult);
         
         if (workflowResult.success) {
           setWorkflowExecution(workflowResult.executionArn);
           setShowWorkflowMonitor(true);
           alert('Course creation workflow started! Monitor progress below.');
         } else {
+          console.error('Step Functions workflow failed:', workflowResult);
           throw new Error(workflowResult.message);
         }
       } else {
@@ -624,7 +641,12 @@ const CourseBuilder = ({ onClose, onCourseCreated }) => {
                 </button>
                 
                 <button
-                  onClick={() => saveCourse('pending')}
+                  onClick={() => {
+                    console.log('Submit for Review clicked');
+                    console.log('Validation result:', isValidForSubmission());
+                    console.log('Loading state:', loading);
+                    saveCourse('pending');
+                  }}
                   disabled={loading || !isValidForSubmission()}
                   className="px-6 py-2 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-xl font-medium hover:from-orange-700 hover:to-red-700 disabled:opacity-50 transition-all duration-300 flex items-center"
                 >
