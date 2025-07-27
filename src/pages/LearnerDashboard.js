@@ -123,60 +123,62 @@ const LearnerDashboard = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome back, John!</h1>
-          <p className="text-gray-600">Continue your learning journey and explore new courses</p>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-800 via-purple-700 to-blue-700 bg-clip-text text-transparent mb-2">
+            Welcome back, John!
+          </h1>
+          <p className="text-slate-600 text-lg">Continue your learning journey and discover new opportunities</p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="group bg-white/70 backdrop-blur-md rounded-3xl shadow-lg p-6 border border-white/20 hover:bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="flex items-center">
-              <div className="bg-blue-100 p-3 rounded-lg">
-                <BookOpen className="w-6 h-6 text-blue-600" />
+              <div className="bg-gradient-to-br from-blue-500 to-cyan-500 p-4 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <BookOpen className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Enrolled Courses</p>
-                <p className="text-2xl font-bold text-gray-900">3</p>
+                <p className="text-sm font-medium text-slate-600">Enrolled Courses</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">3</p>
               </div>
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+          <div className="group bg-white/70 backdrop-blur-md rounded-3xl shadow-lg p-6 border border-white/20 hover:bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="flex items-center">
-              <div className="bg-green-100 p-3 rounded-lg">
-                <CheckCircle className="w-6 h-6 text-green-600" />
+              <div className="bg-gradient-to-br from-green-500 to-emerald-500 p-4 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <CheckCircle className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Completed</p>
-                <p className="text-2xl font-bold text-gray-900">1</p>
+                <p className="text-sm font-medium text-slate-600">Completed</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">1</p>
               </div>
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+          <div className="group bg-white/70 backdrop-blur-md rounded-3xl shadow-lg p-6 border border-white/20 hover:bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="flex items-center">
-              <div className="bg-orange-100 p-3 rounded-lg">
-                <Clock className="w-6 h-6 text-orange-600" />
+              <div className="bg-gradient-to-br from-purple-500 to-pink-500 p-4 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <Clock className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Hours Learned</p>
-                <p className="text-2xl font-bold text-gray-900">24</p>
+                <p className="text-sm font-medium text-slate-600">Hours Learned</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">24</p>
               </div>
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+          <div className="group bg-white/70 backdrop-blur-md rounded-3xl shadow-lg p-6 border border-white/20 hover:bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="flex items-center">
-              <div className="bg-purple-100 p-3 rounded-lg">
-                <Award className="w-6 h-6 text-purple-600" />
+              <div className="bg-gradient-to-br from-orange-500 to-red-500 p-4 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <Award className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Certificates</p>
-                <p className="text-2xl font-bold text-gray-900">1</p>
+                <p className="text-sm font-medium text-slate-600">Certificates</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">1</p>
               </div>
             </div>
           </div>
@@ -184,45 +186,56 @@ const LearnerDashboard = () => {
 
         {/* Continue Learning Section */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Continue Learning</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-slate-800 to-purple-700 bg-clip-text text-transparent mb-6">Continue Learning</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {enrolledCourses.map((course) => (
-              <div key={course.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-                <img src={course.thumbnail} alt={course.title} className="w-full h-48 object-cover" />
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-orange-600 font-medium">{course.category}</span>
+              <div key={course.id} className="group bg-white/70 backdrop-blur-md rounded-3xl shadow-lg border border-white/20 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:bg-white/90">
+                <div className="relative overflow-hidden">
+                  <img src={course.thumbnail} alt={course.title} className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+                <div className="p-8">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-sm bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent font-semibold">{course.category}</span>
                     <div className="flex items-center">
                       <Star className="w-4 h-4 text-yellow-400 mr-1" />
-                      <span className="text-sm text-gray-600">{course.rating}</span>
+                      <span className="text-sm text-slate-600 font-medium">{course.rating}</span>
                     </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{course.title}</h3>
-                  <p className="text-sm text-gray-600 mb-4">by {course.instructor}</p>
+                  <h3 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-purple-700 transition-colors duration-300">{course.title}</h3>
+                  <p className="text-sm text-slate-600 mb-6">by {course.instructor}</p>
                   
-                  <div className="mb-4">
-                    <div className="flex justify-between text-sm text-gray-600 mb-1">
-                      <span>Progress</span>
-                      <span>{course.progress}%</span>
+                  <div className="mb-6">
+                    <div className="flex justify-between text-sm text-slate-600 mb-2">
+                      <span className="font-medium">Progress</span>
+                      <span className="font-bold text-purple-600">{course.progress}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-slate-200 rounded-full h-3">
                       <div 
-                        className="bg-orange-600 h-2 rounded-full" 
+                        className="bg-gradient-to-r from-purple-600 to-blue-500 h-3 rounded-full shadow-sm" 
                         style={{ width: `${course.progress}%` }}
                       ></div>
                     </div>
                   </div>
                   
-                  <div className="flex justify-between items-center text-sm text-gray-600 mb-4">
-                    <span>{course.completedLessons}/{course.totalLessons} lessons</span>
-                    <span>{course.estimatedTime}</span>
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-slate-800">{course.completedLessons}/{course.totalLessons}</div>
+                      <div className="text-xs text-slate-500">Lessons</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-slate-800">{course.estimatedTime}</div>
+                      <div className="text-xs text-slate-500">Remaining</div>
+                    </div>
                   </div>
                   
-                  <p className="text-sm text-gray-700 mb-4">
-                    <strong>Next:</strong> {course.nextLesson}
-                  </p>
+                  <div className="bg-slate-50 rounded-2xl p-4 mb-6">
+                    <p className="text-sm text-slate-700">
+                      <span className="font-semibold text-purple-600">Next:</span> {course.nextLesson}
+                    </p>
+                  </div>
                   
-                  <button className="w-full bg-orange-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-orange-700 transition-colors">
+                  <button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-4 px-4 rounded-2xl font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
                     Continue Learning
                   </button>
                 </div>
@@ -233,14 +246,14 @@ const LearnerDashboard = () => {
 
         {/* Upcoming Live Sessions */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Upcoming Live Sessions</h2>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-slate-800 to-purple-700 bg-clip-text text-transparent mb-6">Upcoming Live Sessions</h2>
+          <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-lg border border-white/20">
             {upcomingSessions.map((session, index) => (
-              <div key={session.id} className={`p-6 ${index !== upcomingSessions.length - 1 ? 'border-b border-gray-200' : ''}`}>
+              <div key={session.id} className={`p-8 ${index !== upcomingSessions.length - 1 ? 'border-b border-white/20' : ''}`}>
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{session.title}</h3>
-                    <p className="text-gray-600 mb-2">with {session.instructor}</p>
+                    <h3 className="text-xl font-bold text-slate-800 mb-2">{session.title}</h3>
+                    <p className="text-slate-600 mb-3 font-medium">with {session.instructor}</p>
                     <div className="flex items-center text-sm text-gray-500 space-x-4">
                       <div className="flex items-center">
                         <Calendar className="w-4 h-4 mr-1" />
@@ -256,7 +269,7 @@ const LearnerDashboard = () => {
                       </div>
                     </div>
                   </div>
-                  <button className="bg-green-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors">
+                  <button className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-3 rounded-2xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
                     Join Session
                   </button>
                 </div>
@@ -268,28 +281,28 @@ const LearnerDashboard = () => {
         {/* Recommended Courses */}
         <div>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Recommended for You</h2>
-            <Link to="/courses" className="text-orange-600 hover:text-orange-700 font-medium">
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-slate-800 to-purple-700 bg-clip-text text-transparent">Recommended for You</h2>
+            <Link to="/courses" className="text-purple-600 hover:text-purple-700 font-semibold">
               View All Courses
             </Link>
           </div>
           
           {/* Search and Filter */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <div className="flex flex-col sm:flex-row gap-4 mb-8">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
               <input
                 type="text"
                 placeholder="Search courses..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                className="w-full pl-12 pr-4 py-4 border border-white/30 rounded-2xl bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:bg-white/80 transition-all duration-300 text-slate-700 placeholder-slate-400"
               />
             </div>
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              className="px-4 py-4 border border-white/30 rounded-2xl bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:bg-white/80 transition-all duration-300 text-slate-700 min-w-[160px]"
             >
               {categories.map(category => (
                 <option key={category} value={category}>

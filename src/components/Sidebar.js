@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { motion } from 'framer-motion';
 import ThemeToggle from './ThemeToggle';
+import { isAdminUser, isDevAdmin } from '../utils/adminWhitelist';
 import { 
   Home, 
   Video, 
@@ -25,7 +26,7 @@ import {
 
 const Sidebar = () => {
   const location = useLocation();
-  const { signOut, userAttributes } = useAuth();
+  const { signOut, userAttributes, currentUser } = useAuth();
   const { darkMode } = useTheme();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -33,6 +34,15 @@ const Sidebar = () => {
   const isCoach = userAttributes && userAttributes['custom:user_type'] === 'COACH';
   const isChurch = userAttributes && userAttributes['custom:user_type'] === 'CHURCH';
   const isLearner = userAttributes && userAttributes['custom:user_type'] === 'LEARNER';
+  // Check for mock admin session
+  const mockSession = localStorage.getItem('skillbridge_admin_session');
+  const hasMockSession = mockSession && JSON.parse(mockSession).timestamp > (Date.now() - 24 * 60 * 60 * 1000);
+  
+  const isAdmin = hasMockSession || (currentUser && (
+    isAdminUser(currentUser.username) ||
+    isAdminUser(userAttributes?.email) ||
+    isDevAdmin(currentUser.username)
+  ));
   
   const handleLogout = async () => {
     try {
@@ -111,6 +121,15 @@ const Sidebar = () => {
         
         <nav className="space-y-1">
           <NavItem to="/" icon={<Home size={20} />} label="Dashboard" />
+          
+          {isAdmin && (
+            <>
+              <NavItem to="/" icon={<Home size={20} />} label="Admin Dashboard" />
+              <NavItem to="/admin/approvals" icon={<Video size={20} />} label="Course Approvals" />
+              <NavItem to="/admin/users" icon={<Users size={20} />} label="User Management" />
+              <NavItem to="/admin/analytics" icon={<BarChart size={20} />} label="Platform Analytics" />
+            </>
+          )}
           
           {(isCoach || isChurch) && (
             <>

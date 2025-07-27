@@ -38,6 +38,10 @@ import Phase3Features from './pages/Phase3Features';
 import AIContentCreator from './pages/AIContentCreator';
 import About from './pages/About';
 import Pricing from './pages/Pricing';
+import CourseApprovalQueue from './components/CourseApprovalQueue';
+import AdminRoute from './components/AdminRoute';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
 
 
 // Protected route component
@@ -77,13 +81,19 @@ const CoachRoute = ({ children }) => {
 function AppContent() {
   const { currentUser, userAttributes } = useAuth();
   
+  // Check for mock admin session
+  const mockSession = localStorage.getItem('skillbridge_admin_session');
+  const hasMockSession = mockSession && JSON.parse(mockSession).timestamp > (Date.now() - 24 * 60 * 60 * 1000);
+  
+  const isAuthenticated = currentUser || hasMockSession;
+  
   return (
     <Router>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
         <Toast />
         <OfflineIndicator />
         <PWAInstallPrompt />
-        {currentUser ? (
+        {isAuthenticated ? (
           <div className="flex flex-col md:flex-row">
             <div className="w-full md:w-64 flex-shrink-0">
               <Sidebar />
@@ -91,6 +101,7 @@ function AppContent() {
             <div className="flex-grow p-4 md:p-6">
               <Routes>
                 <Route path="/" element={
+                  hasMockSession ? <AdminDashboard /> :
                   userAttributes && userAttributes['custom:user_type'] === 'LEARNER' ? 
                     <LearnerDashboard /> : 
                   userAttributes && userAttributes['custom:user_type'] === 'COACH' ? 
@@ -128,6 +139,26 @@ function AppContent() {
                   <CoachRoute>
                     <AIContentCreator />
                   </CoachRoute>
+                } />
+                <Route path="/admin" element={
+                  <AdminRoute>
+                    <AdminDashboard />
+                  </AdminRoute>
+                } />
+                <Route path="/admin/approvals" element={
+                  <AdminRoute>
+                    <CourseApprovalQueue />
+                  </AdminRoute>
+                } />
+                <Route path="/admin/users" element={
+                  <AdminRoute>
+                    <div className="p-6">Admin Users - Coming Soon</div>
+                  </AdminRoute>
+                } />
+                <Route path="/admin/analytics" element={
+                  <AdminRoute>
+                    <div className="p-6">Admin Analytics - Coming Soon</div>
+                  </AdminRoute>
                 } />
                 <Route path="/phase2" element={<Phase2Features />} />
                 <Route path="/phase3" element={<Phase3Features />} />
@@ -172,6 +203,7 @@ function AppContent() {
                 </div>
               </div>
             } />
+            <Route path="/admin/login" element={<AdminLogin />} />
           </Routes>
         )}
       </div>

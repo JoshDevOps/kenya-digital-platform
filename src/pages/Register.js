@@ -239,11 +239,11 @@ const Register = () => {
                 name="userType"
                 value={formData.userType}
                 onChange={handleChange}
-                className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                className="mt-1 block w-full py-2 px-3 border border-white/20 rounded-lg bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm backdrop-blur-sm"
               >
-                <option value="LEARNER">Learner</option>
-                <option value="COACH">Coach</option>
-                <option value="CHURCH">Church</option>
+                <option value="LEARNER" className="bg-slate-800">Learner</option>
+                <option value="COACH" className="bg-slate-800">Coach</option>
+                <option value="CHURCH" className="bg-slate-800">Church</option>
               </select>
             </div>
             

@@ -71,35 +71,39 @@ const Community = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Community</h1>
-          <p className="text-gray-600">Connect, learn, and grow with fellow learners</p>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-800 via-purple-700 to-blue-700 bg-clip-text text-transparent mb-2">
+            Community
+          </h1>
+          <p className="text-slate-600 text-lg">Connect, learn, and grow with fellow learners</p>
         </div>
 
         {/* Tab Navigation */}
-        <div className="border-b border-gray-200 mb-8">
-          <nav className="-mb-px flex space-x-8">
-            {[
-              { id: 'discussions', name: 'Discussions', icon: '💬' },
-              { id: 'study-groups', name: 'Study Groups', icon: '👥' },
-              { id: 'mentors', name: 'Mentors', icon: '🎓' }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === tab.id
-                    ? 'border-orange-500 text-orange-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                <span className="mr-2">{tab.icon}</span>
-                {tab.name}
-              </button>
-            ))}
-          </nav>
+        <div className="mb-8">
+          <div className="bg-white/50 backdrop-blur-sm border border-white/30 rounded-2xl p-2">
+            <nav className="flex space-x-2">
+              {[
+                { id: 'discussions', name: 'Discussions', icon: '💬' },
+                { id: 'study-groups', name: 'Study Groups', icon: '👥' },
+                { id: 'mentors', name: 'Mentors', icon: '🎓' }
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 ${
+                    activeTab === tab.id
+                      ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
+                      : 'text-slate-600 hover:text-slate-800 hover:bg-white/50'
+                  }`}
+                >
+                  <span className="mr-2">{tab.icon}</span>
+                  {tab.name}
+                </button>
+              ))}
+            </nav>
+          </div>
         </div>
 
         {/* Discussions Tab */}
@@ -109,7 +113,7 @@ const Community = () => {
               <select
                 value={selectedCourse}
                 onChange={(e) => setSelectedCourse(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="px-4 py-3 border border-white/30 rounded-2xl bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:bg-white/80 transition-all duration-300 text-slate-700"
               >
                 {courses.map((course) => (
                   <option key={course.id} value={course.id}>
@@ -127,22 +131,31 @@ const Community = () => {
 
         {/* Study Groups Tab */}
         {activeTab === 'study-groups' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {studyGroups.map((group) => (
-              <div key={group.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                <img
-                  src={group.image}
-                  alt={group.name}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{group.name}</h3>
-                  <p className="text-gray-600 text-sm mb-4">{group.description}</p>
-                  <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                    <span>👥 {group.members} members</span>
-                    <span>📅 {group.nextMeeting}</span>
+              <div key={group.id} className="group bg-white/70 backdrop-blur-md rounded-3xl shadow-lg border border-white/20 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:bg-white/90">
+                <div className="relative overflow-hidden">
+                  <img
+                    src={group.image}
+                    alt={group.name}
+                    className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+                <div className="p-8">
+                  <h3 className="text-xl font-bold text-slate-800 mb-3 group-hover:text-purple-700 transition-colors duration-300">{group.name}</h3>
+                  <p className="text-slate-600 text-sm mb-6 leading-relaxed">{group.description}</p>
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-slate-800">{group.members}</div>
+                      <div className="text-xs text-slate-500">Members</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-sm font-bold text-slate-800">{group.nextMeeting}</div>
+                      <div className="text-xs text-slate-500">Next Meeting</div>
+                    </div>
                   </div>
-                  <button className="w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition-colors">
+                  <button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 rounded-2xl font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
                     Join Group
                   </button>
                 </div>
@@ -153,42 +166,52 @@ const Community = () => {
 
         {/* Mentors Tab */}
         {activeTab === 'mentors' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {mentors.map((mentor) => (
-              <div key={mentor.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center mb-4">
-                  <img
-                    src={mentor.image}
-                    alt={mentor.name}
-                    className="w-16 h-16 rounded-full mr-4"
-                  />
+              <div key={mentor.id} className="group bg-white/70 backdrop-blur-md rounded-3xl shadow-lg border border-white/20 p-8 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:bg-white/90">
+                <div className="flex items-center mb-6">
+                  <div className="relative">
+                    <img
+                      src={mentor.image}
+                      alt={mentor.name}
+                      className="w-20 h-20 rounded-full mr-4 group-hover:scale-110 transition-transform duration-300"
+                    />
+                    <div className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-4 border-white ${mentor.available ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                  </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">{mentor.name}</h3>
-                    <p className="text-gray-600 text-sm">{mentor.expertise}</p>
+                    <h3 className="text-xl font-bold text-slate-800 group-hover:text-purple-700 transition-colors duration-300">{mentor.name}</h3>
+                    <p className="text-slate-600 text-sm font-medium">{mentor.expertise}</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                  <div className="flex items-center">
-                    <span className="text-yellow-400 mr-1">⭐</span>
-                    <span>{mentor.rating}</span>
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="text-center">
+                    <div className="flex items-center justify-center mb-1">
+                      <span className="text-yellow-400 mr-1">⭐</span>
+                      <span className="text-lg font-bold text-slate-800">{mentor.rating}</span>
+                    </div>
+                    <div className="text-xs text-slate-500">Rating</div>
                   </div>
-                  <span>{mentor.sessions} sessions</span>
+                  <div className="text-center">
+                    <div className="text-lg font-bold text-slate-800">{mentor.sessions}</div>
+                    <div className="text-xs text-slate-500">Sessions</div>
+                  </div>
                 </div>
 
-                <div className="flex items-center mb-4">
-                  <div className={`w-3 h-3 rounded-full mr-2 ${mentor.available ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  <span className="text-sm text-gray-600">
-                    {mentor.available ? 'Available now' : 'Busy'}
+                <div className="flex items-center justify-center mb-6">
+                  <span className={`text-sm font-medium ${
+                    mentor.available ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {mentor.available ? '✓ Available now' : '• Busy'}
                   </span>
                 </div>
 
                 <button
                   disabled={!mentor.available}
-                  className={`w-full py-2 rounded-lg transition-colors ${
+                  className={`w-full py-3 rounded-2xl font-semibold transition-all duration-300 ${
                     mentor.available
-                      ? 'bg-orange-500 text-white hover:bg-orange-600'
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl hover:-translate-y-1'
+                      : 'bg-slate-300 text-slate-500 cursor-not-allowed'
                   }`}
                 >
                   {mentor.available ? 'Book Session' : 'Unavailable'}

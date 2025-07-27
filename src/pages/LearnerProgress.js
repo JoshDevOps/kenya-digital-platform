@@ -138,18 +138,20 @@ const LearnerProgress = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 space-y-4 lg:space-y-0">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Learning Progress</h1>
-            <p className="text-gray-600">Track your learning journey and achievements</p>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-800 via-purple-700 to-blue-700 bg-clip-text text-transparent mb-2">
+              Learning Progress
+            </h1>
+            <p className="text-slate-600 text-lg">Track your learning journey and celebrate achievements</p>
           </div>
           <select 
             value={selectedPeriod} 
             onChange={(e) => setSelectedPeriod(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+            className="px-4 py-3 border border-white/30 rounded-2xl bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:bg-white/80 transition-all duration-300 text-slate-700"
           >
             <option value="week">This Week</option>
             <option value="month">This Month</option>
@@ -159,73 +161,73 @@ const LearnerProgress = () => {
         </div>
 
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="group bg-white/70 backdrop-blur-md rounded-3xl shadow-lg p-6 border border-white/20 hover:bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="flex items-center">
-              <div className="bg-blue-100 p-3 rounded-lg">
-                <Clock className="w-6 h-6 text-blue-600" />
+              <div className="bg-gradient-to-br from-blue-500 to-cyan-500 p-4 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <Clock className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Hours</p>
-                <p className="text-2xl font-bold text-gray-900">{learningStats.totalHours}</p>
-                <p className="text-sm text-blue-600">+5 this week</p>
+                <p className="text-sm font-medium text-slate-600">Total Hours</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">{learningStats.totalHours}</p>
+                <p className="text-sm text-blue-600 font-medium">+5 this week</p>
               </div>
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+          <div className="group bg-white/70 backdrop-blur-md rounded-3xl shadow-lg p-6 border border-white/20 hover:bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="flex items-center">
-              <div className="bg-green-100 p-3 rounded-lg">
-                <CheckCircle className="w-6 h-6 text-green-600" />
+              <div className="bg-gradient-to-br from-green-500 to-emerald-500 p-4 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <CheckCircle className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Completed</p>
-                <p className="text-2xl font-bold text-gray-900">{learningStats.coursesCompleted}</p>
-                <p className="text-sm text-green-600">1 certificate</p>
+                <p className="text-sm font-medium text-slate-600">Completed</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">{learningStats.coursesCompleted}</p>
+                <p className="text-sm text-green-600 font-medium">1 certificate</p>
               </div>
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+          <div className="group bg-white/70 backdrop-blur-md rounded-3xl shadow-lg p-6 border border-white/20 hover:bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="flex items-center">
-              <div className="bg-orange-100 p-3 rounded-lg">
-                <Target className="w-6 h-6 text-orange-600" />
+              <div className="bg-gradient-to-br from-orange-500 to-red-500 p-4 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <Target className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Current Streak</p>
-                <p className="text-2xl font-bold text-gray-900">{learningStats.currentStreak}</p>
-                <p className="text-sm text-orange-600">days</p>
+                <p className="text-sm font-medium text-slate-600">Current Streak</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">{learningStats.currentStreak}</p>
+                <p className="text-sm text-orange-600 font-medium">days</p>
               </div>
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+          <div className="group bg-white/70 backdrop-blur-md rounded-3xl shadow-lg p-6 border border-white/20 hover:bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="flex items-center">
-              <div className="bg-purple-100 p-3 rounded-lg">
-                <TrendingUp className="w-6 h-6 text-purple-600" />
+              <div className="bg-gradient-to-br from-purple-500 to-pink-500 p-4 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <TrendingUp className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Avg Score</p>
-                <p className="text-2xl font-bold text-gray-900">{learningStats.averageScore}%</p>
-                <p className="text-sm text-purple-600">Excellent!</p>
+                <p className="text-sm font-medium text-slate-600">Avg Score</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">{learningStats.averageScore}%</p>
+                <p className="text-sm text-purple-600 font-medium">Excellent!</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Weekly Progress Chart */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">Weekly Learning Activity</h2>
+        <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-lg border border-white/20 p-8 mb-8">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-purple-700 bg-clip-text text-transparent mb-6">Weekly Learning Activity</h2>
           <div className="h-64 flex items-end space-x-4">
             {weeklyProgress.map((week, index) => (
               <div key={index} className="flex-1 flex flex-col items-center">
                 <div className="w-full flex flex-col space-y-1">
                   <div 
-                    className="w-full bg-orange-600 rounded-t-lg transition-all duration-300 hover:bg-orange-700"
+                    className="w-full bg-gradient-to-t from-purple-600 to-blue-500 rounded-t-2xl transition-all duration-300 hover:from-purple-700 hover:to-blue-600 shadow-lg"
                     style={{ height: `${(week.hours / 15) * 100}%` }}
                   ></div>
                   <div 
-                    className="w-full bg-blue-600 rounded-b-lg transition-all duration-300 hover:bg-blue-700"
+                    className="w-full bg-gradient-to-t from-green-600 to-emerald-500 rounded-b-2xl transition-all duration-300 hover:from-green-700 hover:to-emerald-600 shadow-lg"
                     style={{ height: `${(week.lessons / 20) * 100}%` }}
                   ></div>
                 </div>
@@ -236,20 +238,20 @@ const LearnerProgress = () => {
           </div>
           <div className="flex justify-center space-x-6 mt-4">
             <div className="flex items-center">
-              <div className="w-4 h-4 bg-orange-600 rounded mr-2"></div>
-              <span className="text-sm text-gray-600">Hours</span>
+              <div className="w-4 h-4 bg-gradient-to-r from-purple-600 to-blue-500 rounded mr-2"></div>
+              <span className="text-sm text-slate-600 font-medium">Hours</span>
             </div>
             <div className="flex items-center">
-              <div className="w-4 h-4 bg-blue-600 rounded mr-2"></div>
-              <span className="text-sm text-gray-600">Lessons</span>
+              <div className="w-4 h-4 bg-gradient-to-r from-green-600 to-emerald-500 rounded mr-2"></div>
+              <span className="text-sm text-slate-600 font-medium">Lessons</span>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Course Progress */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Course Progress</h2>
+          <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-lg border border-white/20 p-8">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-purple-700 bg-clip-text text-transparent mb-6">Course Progress</h2>
             <div className="space-y-6">
               {courseProgress.map((course) => (
                 <div key={course.id} className="border border-gray-200 rounded-lg p-4">
@@ -269,10 +271,10 @@ const LearnerProgress = () => {
                           <span>Progress</span>
                           <span>{course.progress}%</span>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div className="w-full bg-slate-200 rounded-full h-3">
                           <div 
-                            className={`h-2 rounded-full transition-all duration-300 ${
-                              course.completed ? 'bg-green-600' : 'bg-orange-600'
+                            className={`h-3 rounded-full transition-all duration-300 shadow-sm ${
+                              course.completed ? 'bg-gradient-to-r from-green-600 to-emerald-500' : 'bg-gradient-to-r from-purple-600 to-blue-500'
                             }`}
                             style={{ width: `${course.progress}%` }}
                           ></div>
@@ -300,8 +302,8 @@ const LearnerProgress = () => {
           {/* Goals & Achievements */}
           <div className="space-y-8">
             {/* Current Goals */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">Current Goals</h2>
+            <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-lg border border-white/20 p-8">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-purple-700 bg-clip-text text-transparent mb-6">Current Goals</h2>
               <div className="space-y-4">
                 {upcomingGoals.map((goal) => (
                   <div key={goal.id} className="border border-gray-200 rounded-lg p-4">
@@ -317,9 +319,9 @@ const LearnerProgress = () => {
                         <span>Progress</span>
                         <span>{goal.progress}/{goal.target}</span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="w-full bg-slate-200 rounded-full h-3">
                         <div 
-                          className="bg-orange-600 h-2 rounded-full transition-all duration-300"
+                          className="bg-gradient-to-r from-purple-600 to-blue-500 h-3 rounded-full transition-all duration-300 shadow-sm"
                           style={{ width: `${(goal.progress / goal.target) * 100}%` }}
                         ></div>
                       </div>
@@ -330,16 +332,16 @@ const LearnerProgress = () => {
             </div>
 
             {/* Achievements */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">Achievements</h2>
+            <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-lg border border-white/20 p-8">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-purple-700 bg-clip-text text-transparent mb-6">Achievements</h2>
               <div className="grid grid-cols-1 gap-4">
                 {achievements.map((achievement) => (
                   <div 
                     key={achievement.id} 
-                    className={`border rounded-lg p-4 ${
+                    className={`border rounded-2xl p-6 transition-all duration-300 ${
                       achievement.earned 
-                        ? 'border-green-200 bg-green-50' 
-                        : 'border-gray-200 bg-gray-50'
+                        ? 'border-green-200/50 bg-gradient-to-r from-green-50/50 to-emerald-50/50 shadow-lg' 
+                        : 'border-slate-200/50 bg-slate-50/50'
                     }`}
                   >
                     <div className="flex items-center space-x-3">

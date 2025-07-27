@@ -98,89 +98,91 @@ const CoachDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 space-y-4 lg:space-y-0">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Coach Dashboard</h1>
-            <p className="text-gray-600">Manage your courses and track your success</p>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-800 via-purple-700 to-blue-700 bg-clip-text text-transparent mb-2">
+              Coach Dashboard
+            </h1>
+            <p className="text-slate-600 text-lg">Manage your courses and track your teaching success</p>
           </div>
-          <div className="flex space-x-3">
-            <Link to="/content" className="bg-orange-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-orange-700 transition-colors flex items-center">
-              <Plus className="w-4 h-4 mr-2" />
+          <div className="flex space-x-4">
+            <Link to="/content" className="group bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-2xl font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 flex items-center shadow-lg hover:shadow-xl hover:-translate-y-1">
+              <Plus className="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300" />
               New Course
             </Link>
-            <Link to="/live" className="bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center">
-              <Calendar className="w-4 h-4 mr-2" />
+            <Link to="/live" className="group bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-2xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-300 flex items-center shadow-lg hover:shadow-xl hover:-translate-y-1">
+              <Calendar className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
               Schedule Session
             </Link>
           </div>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="group bg-white/70 backdrop-blur-md rounded-3xl shadow-lg p-6 border border-white/20 hover:bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="flex items-center">
-              <div className="bg-green-100 p-3 rounded-lg">
-                <DollarSign className="w-6 h-6 text-green-600" />
+              <div className="bg-gradient-to-br from-green-500 to-emerald-500 p-4 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <DollarSign className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-                <p className="text-2xl font-bold text-gray-900">${stats.totalRevenue.toLocaleString()}</p>
-                <p className="text-sm text-green-600">+12% from last month</p>
+                <p className="text-sm font-medium text-slate-600">Total Revenue</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">${stats.totalRevenue.toLocaleString()}</p>
+                <p className="text-sm text-green-600 font-medium">+12% from last month</p>
               </div>
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+          <div className="group bg-white/70 backdrop-blur-md rounded-3xl shadow-lg p-6 border border-white/20 hover:bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="flex items-center">
-              <div className="bg-blue-100 p-3 rounded-lg">
-                <Users className="w-6 h-6 text-blue-600" />
+              <div className="bg-gradient-to-br from-blue-500 to-cyan-500 p-4 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <Users className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Students</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.totalStudents}</p>
-                <p className="text-sm text-blue-600">+8 new this week</p>
+                <p className="text-sm font-medium text-slate-600">Total Students</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">{stats.totalStudents}</p>
+                <p className="text-sm text-blue-600 font-medium">+8 new this week</p>
               </div>
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+          <div className="group bg-white/70 backdrop-blur-md rounded-3xl shadow-lg p-6 border border-white/20 hover:bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="flex items-center">
-              <div className="bg-purple-100 p-3 rounded-lg">
-                <BookOpen className="w-6 h-6 text-purple-600" />
+              <div className="bg-gradient-to-br from-purple-500 to-pink-500 p-4 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <BookOpen className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Active Courses</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.activeCourses}</p>
-                <p className="text-sm text-purple-600">{stats.draftCourses} in draft</p>
+                <p className="text-sm font-medium text-slate-600">Active Courses</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">{stats.activeCourses}</p>
+                <p className="text-sm text-purple-600 font-medium">{stats.draftCourses} in draft</p>
               </div>
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+          <div className="group bg-white/70 backdrop-blur-md rounded-3xl shadow-lg p-6 border border-white/20 hover:bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="flex items-center">
-              <div className="bg-orange-100 p-3 rounded-lg">
-                <TrendingUp className="w-6 h-6 text-orange-600" />
+              <div className="bg-gradient-to-br from-orange-500 to-red-500 p-4 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <TrendingUp className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Avg Completion</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.completionRate}%</p>
-                <p className="text-sm text-orange-600">+5% improvement</p>
+                <p className="text-sm font-medium text-slate-600">Avg Completion</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">{stats.completionRate}%</p>
+                <p className="text-sm text-orange-600 font-medium">+5% improvement</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Revenue Chart */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+        <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-lg border border-white/20 p-8 mb-8">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-gray-900">Revenue Overview</h2>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-purple-700 bg-clip-text text-transparent">Revenue Overview</h2>
             <select 
               value={selectedPeriod} 
               onChange={(e) => setSelectedPeriod(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              className="px-4 py-3 border border-white/30 rounded-2xl bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:bg-white/80 transition-all duration-300 text-slate-700"
             >
               <option value="7">Last 7 days</option>
               <option value="30">Last 30 days</option>
@@ -192,7 +194,7 @@ const CoachDashboard = () => {
             {revenueData.map((data, index) => (
               <div key={index} className="flex-1 flex flex-col items-center">
                 <div 
-                  className="w-full bg-orange-600 rounded-t-lg transition-all duration-300 hover:bg-orange-700"
+                  className="w-full bg-gradient-to-t from-purple-600 to-blue-500 rounded-t-2xl transition-all duration-300 hover:from-purple-700 hover:to-blue-600 shadow-lg"
                   style={{ height: `${(data.revenue / 5000) * 100}%` }}
                 ></div>
                 <p className="text-sm text-gray-600 mt-2">{data.month}</p>
@@ -211,10 +213,10 @@ const CoachDashboard = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Course Performance */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-lg border border-white/20 p-8">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Course Performance</h2>
-              <Link to="/content" className="text-orange-600 hover:text-orange-700 font-medium">View All</Link>
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-purple-700 bg-clip-text text-transparent">Course Performance</h2>
+              <Link to="/content" className="text-purple-600 hover:text-purple-700 font-medium">View All</Link>
             </div>
             <div className="space-y-4">
               {(courses.length > 0 ? courses : mockCourses).slice(0, 3).map((course) => (
@@ -248,10 +250,10 @@ const CoachDashboard = () => {
           </div>
 
           {/* Recent Students */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-lg border border-white/20 p-8">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Recent Enrollments</h2>
-              <Link to="/analytics" className="text-orange-600 hover:text-orange-700 font-medium">View All</Link>
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-purple-700 bg-clip-text text-transparent">Recent Enrollments</h2>
+              <Link to="/analytics" className="text-purple-600 hover:text-purple-700 font-medium">View All</Link>
             </div>
             <div className="space-y-4">
               {recentStudents.map((student) => (
@@ -265,7 +267,7 @@ const CoachDashboard = () => {
                     <p className="text-sm font-medium text-gray-900">{student.progress}%</p>
                     <div className="w-16 bg-gray-200 rounded-full h-2 mt-1">
                       <div 
-                        className="bg-orange-600 h-2 rounded-full" 
+                        className="bg-gradient-to-r from-purple-600 to-blue-500 h-2 rounded-full" 
                         style={{ width: `${student.progress}%` }}
                       ></div>
                     </div>
@@ -277,10 +279,10 @@ const CoachDashboard = () => {
         </div>
 
         {/* Upcoming Sessions */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-lg border border-white/20 p-8">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-gray-900">Upcoming Live Sessions</h2>
-            <Link to="/live" className="text-orange-600 hover:text-orange-700 font-medium">Manage Sessions</Link>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-purple-700 bg-clip-text text-transparent">Upcoming Live Sessions</h2>
+            <Link to="/live" className="text-purple-600 hover:text-purple-700 font-medium">Manage Sessions</Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {upcomingSessions.map((session) => (
@@ -291,7 +293,7 @@ const CoachDashboard = () => {
                   <span>{new Date(session.date).toLocaleDateString()} at {session.time}</span>
                   <span>{session.attendees} registered</span>
                 </div>
-                <button className="mt-3 w-full bg-orange-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-orange-700 transition-colors">
+                <button className="mt-3 w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-4 rounded-2xl font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
                   Start Session
                 </button>
               </div>

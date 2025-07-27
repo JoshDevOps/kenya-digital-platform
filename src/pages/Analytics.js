@@ -84,32 +84,34 @@ const Analytics = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 space-y-4 lg:space-y-0">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Analytics Dashboard</h1>
-            <p className="text-gray-600">Track your performance and growth</p>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-800 via-purple-700 to-blue-700 bg-clip-text text-transparent mb-2">
+              Analytics Dashboard
+            </h1>
+            <p className="text-slate-600 text-lg">Track your performance and growth metrics</p>
           </div>
-          <div className="flex space-x-3">
-            <div className="flex space-x-1 bg-gray-200 rounded-lg p-1">
+          <div className="flex flex-wrap gap-3">
+            <div className="flex bg-white/50 backdrop-blur-sm border border-white/30 rounded-2xl p-1">
               <button
                 onClick={() => setViewMode('overview')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
                   viewMode === 'overview' 
-                    ? 'bg-white text-gray-900 shadow-sm' 
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg' 
+                    : 'text-slate-600 hover:text-slate-800 hover:bg-white/50'
                 }`}
               >
                 Overview
               </button>
               <button
                 onClick={() => setViewMode('advanced')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
                   viewMode === 'advanced' 
-                    ? 'bg-white text-gray-900 shadow-sm' 
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg' 
+                    : 'text-slate-600 hover:text-slate-800 hover:bg-white/50'
                 }`}
               >
                 Advanced
@@ -118,15 +120,15 @@ const Analytics = () => {
             <select 
               value={selectedPeriod} 
               onChange={(e) => setSelectedPeriod(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              className="px-4 py-3 border border-white/30 rounded-2xl bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:bg-white/80 transition-all duration-300 text-slate-700"
             >
               <option value="7">Last 7 days</option>
               <option value="30">Last 30 days</option>
               <option value="90">Last 3 months</option>
               <option value="365">Last year</option>
             </select>
-            <button className="bg-orange-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-orange-700 transition-colors flex items-center">
-              <Download className="w-4 h-4 mr-2" />
+            <button className="group bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-2xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-300 flex items-center shadow-lg hover:shadow-xl hover:-translate-y-1">
+              <Download className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-300" />
               Export
             </button>
           </div>
@@ -137,16 +139,16 @@ const Analytics = () => {
         ) : (
           <>
             {/* Key Metrics */}
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8">
+          <div className="group bg-white/70 backdrop-blur-md rounded-3xl shadow-lg p-6 border border-white/20 hover:bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="flex items-center">
-              <div className="bg-green-100 p-3 rounded-lg">
-                <DollarSign className="w-6 h-6 text-green-600" />
+              <div className="bg-gradient-to-br from-green-500 to-emerald-500 p-4 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <DollarSign className="w-6 h-6 text-white" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Revenue</p>
-                <p className="text-2xl font-bold text-gray-900">${stats.totalRevenue.toLocaleString()}</p>
-                <p className="text-sm text-green-600">+12.5%</p>
+                <p className="text-sm font-medium text-slate-600">Revenue</p>
+                <p className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">${stats.totalRevenue.toLocaleString()}</p>
+                <p className="text-sm text-green-600 font-medium">+12.5%</p>
               </div>
             </div>
           </div>
@@ -218,19 +220,19 @@ const Analytics = () => {
         </div>
 
         {/* Revenue Chart */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+        <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-lg border border-white/20 p-8 mb-8">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-gray-900">Revenue & Student Growth</h2>
             <div className="flex space-x-2">
               <button 
                 onClick={() => setSelectedMetric('revenue')}
-                className={`px-3 py-1 rounded text-sm ${selectedMetric === 'revenue' ? 'bg-orange-600 text-white' : 'text-gray-600'}`}
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${selectedMetric === 'revenue' ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg' : 'text-slate-600 hover:text-slate-800 hover:bg-white/50'}`}
               >
                 Revenue
               </button>
               <button 
                 onClick={() => setSelectedMetric('students')}
-                className={`px-3 py-1 rounded text-sm ${selectedMetric === 'students' ? 'bg-orange-600 text-white' : 'text-gray-600'}`}
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${selectedMetric === 'students' ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg' : 'text-slate-600 hover:text-slate-800 hover:bg-white/50'}`}
               >
                 Students
               </button>
@@ -240,7 +242,7 @@ const Analytics = () => {
             {revenueData.map((data, index) => (
               <div key={index} className="flex-1 flex flex-col items-center">
                 <div 
-                  className="w-full bg-orange-600 rounded-t-lg transition-all duration-300 hover:bg-orange-700"
+                  className="w-full bg-gradient-to-t from-purple-600 to-blue-500 rounded-t-2xl transition-all duration-300 hover:from-purple-700 hover:to-blue-600 shadow-lg"
                   style={{ 
                     height: selectedMetric === 'revenue' 
                       ? `${(data.revenue / 6000) * 100}%` 
@@ -258,8 +260,8 @@ const Analytics = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Top Performing Courses */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Top Performing Courses</h2>
+          <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-lg border border-white/20 p-8">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-purple-700 bg-clip-text text-transparent mb-6">Top Performing Courses</h2>
             <div className="space-y-4">
               {topCourses.map((course, index) => (
                 <div key={course.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
@@ -281,8 +283,8 @@ const Analytics = () => {
           </div>
 
           {/* Student Demographics */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Student Demographics</h2>
+          <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-lg border border-white/20 p-8">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-purple-700 bg-clip-text text-transparent mb-6">Student Demographics</h2>
             <div className="space-y-4">
               {studentDemographics.map((demo, index) => (
                 <div key={index} className="flex items-center justify-between">
@@ -291,7 +293,7 @@ const Analytics = () => {
                     <div className="flex-1 mx-4">
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div 
-                          className="bg-orange-600 h-2 rounded-full" 
+                          className="bg-gradient-to-r from-purple-600 to-blue-500 h-2 rounded-full" 
                           style={{ width: `${demo.percentage}%` }}
                         ></div>
                       </div>
@@ -308,8 +310,8 @@ const Analytics = () => {
         </div>
 
         {/* Traffic Sources */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">Traffic Sources</h2>
+        <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-lg border border-white/20 p-8">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-purple-700 bg-clip-text text-transparent mb-6">Traffic Sources</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {trafficSources.map((source, index) => (
               <div key={index} className="text-center">
@@ -332,7 +334,7 @@ const Analytics = () => {
                       strokeWidth="8"
                       fill="transparent"
                       strokeDasharray={`${source.percentage * 2.51} 251`}
-                      className="text-orange-600"
+                      className="text-purple-600"
                     />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
