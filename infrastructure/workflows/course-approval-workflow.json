@@ -1,0 +1,166 @@
+{
+  "Comment": "SkillBridge Course Approval Workflow",
+  "StartAt": "SubmitForReview",
+  "States": {
+    "SubmitForReview": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${SubmitReviewLambda}",
+        "Payload.$": "$"
+      },
+      "ResultPath": "$.submission",
+      "Next": "AutoQualityCheck"
+    },
+    "AutoQualityCheck": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${QualityCheckLambda}",
+        "Payload": {
+          "courseId.$": "$.courseId",
+          "content.$": "$.content"
+        }
+      },
+      "ResultPath": "$.qualityCheck",
+      "Next": "PassesAutoCheck"
+    },
+    "PassesAutoCheck": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.qualityCheck.Payload.passed",
+          "BooleanEquals": true,
+          "Next": "WaitForAdminReview"
+        }
+      ],
+      "Default": "AutoReject"
+    },
+    "WaitForAdminReview": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
+      "Parameters": {
+        "FunctionName": "${AdminReviewLambda}",
+        "Payload": {
+          "courseId.$": "$.courseId",
+          "taskToken.$": "$$.Task.Token"
+        }
+      },
+      "ResultPath": "$.adminReview",
+      "Next": "ProcessAdminDecision"
+    },
+    "ProcessAdminDecision": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.adminReview.decision",
+          "StringEquals": "approved",
+          "Next": "ApproveCourse"
+        },
+        {
+          "Variable": "$.adminReview.decision",
+          "StringEquals": "rejected",
+          "Next": "RejectCourse"
+        }
+      ],
+      "Default": "RequestRevision"
+    },
+    "ApproveCourse": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${ApproveCourseLambda}",
+        "Payload": {
+          "courseId.$": "$.courseId",
+          "adminId.$": "$.adminReview.adminId"
+        }
+      },
+      "ResultPath": "$.approval",
+      "Next": "PublishCourse"
+    },
+    "PublishCourse": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${PublishCourseLambda}",
+        "Payload": {
+          "courseId.$": "$.courseId"
+        }
+      },
+      "ResultPath": "$.publication",
+      "Next": "NotifyApproval"
+    },
+    "NotifyApproval": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${NotificationLambda}",
+        "Payload": {
+          "type": "course_approved",
+          "courseId.$": "$.courseId",
+          "instructorId.$": "$.instructorId"
+        }
+      },
+      "Next": "ApprovalSuccess"
+    },
+    "RejectCourse": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${RejectCourseLambda}",
+        "Payload": {
+          "courseId.$": "$.courseId",
+          "reason.$": "$.adminReview.reason"
+        }
+      },
+      "ResultPath": "$.rejection",
+      "Next": "NotifyRejection"
+    },
+    "NotifyRejection": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${NotificationLambda}",
+        "Payload": {
+          "type": "course_rejected",
+          "courseId.$": "$.courseId",
+          "instructorId.$": "$.instructorId",
+          "reason.$": "$.rejection.Payload.reason"
+        }
+      },
+      "Next": "RejectionComplete"
+    },
+    "AutoReject": {
+      "Type": "Pass",
+      "Result": {
+        "status": "auto_rejected",
+        "message": "Course failed automated quality checks"
+      },
+      "End": true
+    },
+    "RequestRevision": {
+      "Type": "Pass",
+      "Result": {
+        "status": "revision_requested",
+        "message": "Course requires revision"
+      },
+      "End": true
+    },
+    "ApprovalSuccess": {
+      "Type": "Pass",
+      "Result": {
+        "status": "approved",
+        "message": "Course approved and published"
+      },
+      "End": true
+    },
+    "RejectionComplete": {
+      "Type": "Pass",
+      "Result": {
+        "status": "rejected",
+        "message": "Course rejected"
+      },
+      "End": true
+    }
+  }
+}

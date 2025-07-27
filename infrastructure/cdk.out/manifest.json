@@ -308,6 +308,275 @@
       },
       "displayName": "SkillBridgeStack"
     },
+    "StepFunctionsStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "StepFunctionsStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "StepFunctionsStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://637423178245/us-east-1",
+      "properties": {
+        "templateFile": "StepFunctionsStack.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::637423178245:role/cdk-hnb659fds-deploy-role-637423178245-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::637423178245:role/cdk-hnb659fds-cfn-exec-role-637423178245-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-637423178245-us-east-1/11ad912f9fa4883dc78ca9848450e373153bc193bf88d6214f116d97932b8650.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "StepFunctionsStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::637423178245:role/cdk-hnb659fds-lookup-role-637423178245-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "StepFunctionsStack.assets"
+      ],
+      "metadata": {
+        "/StepFunctionsStack/CoursesTable": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "CoursesTable3F79D98E"
+            }
+          }
+        ],
+        "/StepFunctionsStack/CoursesTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CoursesTable3F79D98E"
+          }
+        ],
+        "/StepFunctionsStack/UsersTable": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "UsersTable9725E9C8"
+            }
+          }
+        ],
+        "/StepFunctionsStack/UsersTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsersTable9725E9C8"
+          }
+        ],
+        "/StepFunctionsStack/NotificationsTable": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "NotificationsTable76DCFC6C"
+            }
+          }
+        ],
+        "/StepFunctionsStack/NotificationsTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NotificationsTable76DCFC6C"
+          }
+        ],
+        "/StepFunctionsStack/RawVideosBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RawVideosBucketAE61E2E4"
+          }
+        ],
+        "/StepFunctionsStack/ProcessedVideosBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ProcessedVideosBucketB330264B"
+          }
+        ],
+        "/StepFunctionsStack/CourseMaterialsBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CourseMaterialsBucket628AFE73"
+          }
+        ],
+        "/StepFunctionsStack/ValidateCourseLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ValidateCourseLambdaServiceRole9A63FED4"
+          }
+        ],
+        "/StepFunctionsStack/ValidateCourseLambda/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ValidateCourseLambdaServiceRoleDefaultPolicy9B0858C8"
+          }
+        ],
+        "/StepFunctionsStack/ValidateCourseLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ValidateCourseLambda78A817FE"
+          }
+        ],
+        "/StepFunctionsStack/ProcessVideoLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ProcessVideoLambdaServiceRoleE7C33A75"
+          }
+        ],
+        "/StepFunctionsStack/ProcessVideoLambda/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ProcessVideoLambdaServiceRoleDefaultPolicyC62D2559"
+          }
+        ],
+        "/StepFunctionsStack/ProcessVideoLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ProcessVideoLambdaB594CC8C"
+          }
+        ],
+        "/StepFunctionsStack/GenerateThumbnailLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GenerateThumbnailLambdaServiceRole78859D1B"
+          }
+        ],
+        "/StepFunctionsStack/GenerateThumbnailLambda/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GenerateThumbnailLambdaServiceRoleDefaultPolicyACA38DA1"
+          }
+        ],
+        "/StepFunctionsStack/GenerateThumbnailLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GenerateThumbnailLambdaE98F6A29"
+          }
+        ],
+        "/StepFunctionsStack/CreateCourseLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CreateCourseLambdaServiceRole64A8447B"
+          }
+        ],
+        "/StepFunctionsStack/CreateCourseLambda/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CreateCourseLambdaServiceRoleDefaultPolicyB56AF7E2"
+          }
+        ],
+        "/StepFunctionsStack/CreateCourseLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CreateCourseLambda9D56EE75"
+          }
+        ],
+        "/StepFunctionsStack/NotificationLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NotificationLambdaServiceRoleA65BA193"
+          }
+        ],
+        "/StepFunctionsStack/NotificationLambda/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NotificationLambdaServiceRoleDefaultPolicy56F80AE2"
+          }
+        ],
+        "/StepFunctionsStack/NotificationLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NotificationLambda0BF28E71"
+          }
+        ],
+        "/StepFunctionsStack/CourseCreationStateMachine/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CourseCreationStateMachineRole95C451F8"
+          }
+        ],
+        "/StepFunctionsStack/CourseCreationStateMachine/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CourseCreationStateMachineRoleDefaultPolicy31ECF0EC"
+          }
+        ],
+        "/StepFunctionsStack/CourseCreationStateMachine/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CourseCreationStateMachineBEE3002C"
+          }
+        ],
+        "/StepFunctionsStack/CourseApprovalStateMachine/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CourseApprovalStateMachineRole707533F2"
+          }
+        ],
+        "/StepFunctionsStack/CourseApprovalStateMachine/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CourseApprovalStateMachine7876016B"
+          }
+        ],
+        "/StepFunctionsStack/CourseCreationStateMachineArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CourseCreationStateMachineArn"
+          }
+        ],
+        "/StepFunctionsStack/CourseApprovalStateMachineArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CourseApprovalStateMachineArn"
+          }
+        ],
+        "/StepFunctionsStack/RawVideosBucketName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RawVideosBucketName"
+          }
+        ],
+        "/StepFunctionsStack/ProcessedVideosBucketName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ProcessedVideosBucketName"
+          }
+        ],
+        "/StepFunctionsStack/CourseMaterialsBucketName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CourseMaterialsBucketName"
+          }
+        ],
+        "/StepFunctionsStack/CoursesTableName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CoursesTableName"
+          }
+        ],
+        "/StepFunctionsStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/StepFunctionsStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/StepFunctionsStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "StepFunctionsStack"
+    },
     "SkillBridgePipelineStack.assets": {
       "type": "cdk:asset-manifest",
       "properties": {

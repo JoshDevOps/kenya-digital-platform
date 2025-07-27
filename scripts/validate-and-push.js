@@ -2,6 +2,20 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
+// Check if infrastructure deployment is requested
+const deployInfrastructure = process.argv.includes('--infrastructure') || process.argv.includes('--infra');
+
+if (deployInfrastructure) {
+  console.log('🏗️ Infrastructure deployment requested...');
+  try {
+    execSync('node scripts/deploy-infrastructure.js', { stdio: 'inherit' });
+    console.log('✅ Infrastructure deployment completed');
+  } catch (error) {
+    console.error('❌ Infrastructure deployment failed:', error.message);
+    process.exit(1);
+  }
+}
+
 console.log('🔍 Running pre-push validation...');
 console.log('📍 Working directory:', process.cwd());
 console.log('⏰ Started at:', new Date().toLocaleString());

@@ -4,12 +4,16 @@ import { Storage, API, graphqlOperation } from 'aws-amplify';
 import { CREATE_COURSE } from '../graphql/mutations';
 import { v4 as uuidv4 } from 'uuid';
 import { useAuth } from '../contexts/AuthContext';
+import { StepFunctionsService } from '../services/stepFunctionsService';
+import WorkflowMonitor from './WorkflowMonitor';
 
 const CourseBuilder = ({ onClose, onCourseCreated }) => {
   const { currentUser } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({});
+  const [workflowExecution, setWorkflowExecution] = useState(null);
+  const [showWorkflowMonitor, setShowWorkflowMonitor] = useState(false);
   
   const [courseData, setCourseData] = useState({
     title: '',
@@ -168,10 +172,10 @@ const CourseBuilder = ({ onClose, onCourseCreated }) => {
     try {
       setLoading(true);
       
-      // For local development, skip file uploads and use placeholder URLs
+      const courseId = uuidv4();
       const courseToSave = {
         ...courseData,
-        id: uuidv4(),
+        id: courseId,
         thumbnail: courseData.thumbnail || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=200&fit=crop',
         lessons: courseData.lessons.map(lesson => ({
           ...lesson,
@@ -182,45 +186,61 @@ const CourseBuilder = ({ onClose, onCourseCreated }) => {
         enrollmentCount: 0,
         rating: 0,
         status: status,
-        isPublished: false, // Only published after admin approval
+        isPublished: false,
         submittedAt: status === 'pending' ? new Date().toISOString() : null,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
 
-      // Try GraphQL API first
-      try {
-        const result = await API.graphql(graphqlOperation(CREATE_COURSE, {
-          input: courseToSave
-        }));
+      if (status === 'pending') {
+        // Use Step Functions workflow for course creation and approval
+        const workflowResult = await StepFunctionsService.startCourseCreation(courseToSave);
         
-        const message = status === 'pending' 
-          ? 'Course submitted for review! You\'ll be notified once it\'s approved.' 
-          : 'Course saved as draft successfully!';
-        alert(message);
-        onCourseCreated && onCourseCreated(result.data.createCourse);
-      } catch (apiError) {
-        console.log('GraphQL/AWS failed, using localStorage for local development:', apiError);
-        
-        // Fallback to localStorage for local development
-        const existingCourses = JSON.parse(localStorage.getItem('skillbridge_courses') || '[]');
-        existingCourses.push(courseToSave);
-        localStorage.setItem('skillbridge_courses', JSON.stringify(existingCourses));
-        
-        const message = status === 'pending' 
-          ? 'Course submitted for review! (Local development mode)' 
-          : 'Course saved as draft! (Local development mode)';
-        alert(message);
-        onCourseCreated && onCourseCreated(courseToSave);
+        if (workflowResult.success) {
+          setWorkflowExecution(workflowResult.executionArn);
+          setShowWorkflowMonitor(true);
+          alert('Course creation workflow started! Monitor progress below.');
+        } else {
+          throw new Error(workflowResult.message);
+        }
+      } else {
+        // For drafts, save directly
+        try {
+          const result = await API.graphql(graphqlOperation(CREATE_COURSE, {
+            input: courseToSave
+          }));
+          
+          alert('Course saved as draft successfully!');
+          onCourseCreated && onCourseCreated(result.data.createCourse);
+          onClose && onClose();
+        } catch (apiError) {
+          console.log('GraphQL/AWS failed, using localStorage for local development:', apiError);
+          
+          const existingCourses = JSON.parse(localStorage.getItem('skillbridge_courses') || '[]');
+          existingCourses.push(courseToSave);
+          localStorage.setItem('skillbridge_courses', JSON.stringify(existingCourses));
+          
+          alert('Course saved as draft! (Local development mode)');
+          onCourseCreated && onCourseCreated(courseToSave);
+          onClose && onClose();
+        }
       }
-      
-      onClose && onClose();
       
     } catch (error) {
       console.error('Error creating course:', error);
       alert('Failed to create course: ' + error.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleWorkflowStatusChange = (status) => {
+    if (status === 'SUCCEEDED') {
+      alert('Course created and processed successfully!');
+      onCourseCreated && onCourseCreated({ id: courseData.id });
+      onClose && onClose();
+    } else if (status === 'FAILED') {
+      alert('Course creation workflow failed. Please try again.');
     }
   };
 
@@ -554,6 +574,15 @@ const CourseBuilder = ({ onClose, onCourseCreated }) => {
           {currentStep === 1 && renderStep1()}
           {currentStep === 2 && renderStep2()}
           {currentStep === 3 && renderStep3()}
+          
+          {showWorkflowMonitor && workflowExecution && (
+            <div className="mt-6">
+              <WorkflowMonitor 
+                executionArn={workflowExecution}
+                onStatusChange={handleWorkflowStatusChange}
+              />
+            </div>
+          )}
         </div>
 
         {/* Navigation */}

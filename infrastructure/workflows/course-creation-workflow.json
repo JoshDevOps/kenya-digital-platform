@@ -1,0 +1,123 @@
+{
+  "Comment": "SkillBridge Course Creation Workflow",
+  "StartAt": "ValidateCourseInput",
+  "States": {
+    "ValidateCourseInput": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${ValidateCourseLambda}",
+        "Payload.$": "$"
+      },
+      "ResultPath": "$.validation",
+      "Next": "IsValidCourse",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "HandleValidationError",
+          "ResultPath": "$.error"
+        }
+      ]
+    },
+    "IsValidCourse": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.validation.Payload.isValid",
+          "BooleanEquals": true,
+          "Next": "ProcessMediaContent"
+        }
+      ],
+      "Default": "CourseValidationFailed"
+    },
+    "ProcessMediaContent": {
+      "Type": "Parallel",
+      "Branches": [
+        {
+          "StartAt": "ProcessVideos",
+          "States": {
+            "ProcessVideos": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${ProcessVideoLambda}",
+                "Payload": {
+                  "courseId.$": "$.courseId",
+                  "videos.$": "$.videos"
+                }
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "GenerateThumbnails",
+          "States": {
+            "GenerateThumbnails": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${GenerateThumbnailLambda}",
+                "Payload": {
+                  "courseId.$": "$.courseId",
+                  "images.$": "$.images"
+                }
+              },
+              "End": true
+            }
+          }
+        }
+      ],
+      "ResultPath": "$.mediaProcessing",
+      "Next": "CreateCourseRecord"
+    },
+    "CreateCourseRecord": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${CreateCourseLambda}",
+        "Payload.$": "$"
+      },
+      "ResultPath": "$.courseRecord",
+      "Next": "SendCreationNotification"
+    },
+    "SendCreationNotification": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${NotificationLambda}",
+        "Payload": {
+          "type": "course_created",
+          "courseId.$": "$.courseId",
+          "instructorId.$": "$.instructorId"
+        }
+      },
+      "ResultPath": "$.notification",
+      "Next": "CourseCreationSuccess"
+    },
+    "CourseCreationSuccess": {
+      "Type": "Pass",
+      "Result": {
+        "status": "success",
+        "message": "Course created successfully"
+      },
+      "End": true
+    },
+    "CourseValidationFailed": {
+      "Type": "Pass",
+      "Result": {
+        "status": "failed",
+        "message": "Course validation failed"
+      },
+      "End": true
+    },
+    "HandleValidationError": {
+      "Type": "Pass",
+      "Result": {
+        "status": "error",
+        "message": "Validation error occurred"
+      },
+      "End": true
+    }
+  }
+}

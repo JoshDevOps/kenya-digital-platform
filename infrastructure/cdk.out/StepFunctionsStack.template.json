@@ -1,0 +1,1246 @@
+{
+ "Resources": {
+  "CoursesTable3F79D98E": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "KeySchema": [
+     {
+      "AttributeName": "id",
+      "KeyType": "HASH"
+     }
+    ],
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "id",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "TableName": "skillbridge-courses"
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/CoursesTable/Resource"
+   }
+  },
+  "UsersTable9725E9C8": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "KeySchema": [
+     {
+      "AttributeName": "id",
+      "KeyType": "HASH"
+     }
+    ],
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "id",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "TableName": "skillbridge-users"
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/UsersTable/Resource"
+   }
+  },
+  "NotificationsTable76DCFC6C": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "KeySchema": [
+     {
+      "AttributeName": "id",
+      "KeyType": "HASH"
+     }
+    ],
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "id",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "TableName": "skillbridge-notifications"
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/NotificationsTable/Resource"
+   }
+  },
+  "RawVideosBucketAE61E2E4": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketName": "skillbridge-raw-videos",
+    "CorsConfiguration": {
+     "CorsRules": [
+      {
+       "AllowedHeaders": [
+        "*"
+       ],
+       "AllowedMethods": [
+        "GET",
+        "PUT",
+        "POST"
+       ],
+       "AllowedOrigins": [
+        "*"
+       ]
+      }
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/RawVideosBucket/Resource"
+   }
+  },
+  "ProcessedVideosBucketB330264B": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketName": "skillbridge-processed-videos",
+    "CorsConfiguration": {
+     "CorsRules": [
+      {
+       "AllowedHeaders": [
+        "*"
+       ],
+       "AllowedMethods": [
+        "GET"
+       ],
+       "AllowedOrigins": [
+        "*"
+       ]
+      }
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/ProcessedVideosBucket/Resource"
+   }
+  },
+  "CourseMaterialsBucket628AFE73": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketName": "skillbridge-course-materials",
+    "CorsConfiguration": {
+     "CorsRules": [
+      {
+       "AllowedHeaders": [
+        "*"
+       ],
+       "AllowedMethods": [
+        "GET",
+        "PUT"
+       ],
+       "AllowedOrigins": [
+        "*"
+       ]
+      }
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/CourseMaterialsBucket/Resource"
+   }
+  },
+  "ValidateCourseLambdaServiceRole9A63FED4": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/ValidateCourseLambda/ServiceRole/Resource"
+   }
+  },
+  "ValidateCourseLambdaServiceRoleDefaultPolicy9B0858C8": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CoursesTable3F79D98E",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ValidateCourseLambdaServiceRoleDefaultPolicy9B0858C8",
+    "Roles": [
+     {
+      "Ref": "ValidateCourseLambdaServiceRole9A63FED4"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/ValidateCourseLambda/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ValidateCourseLambda78A817FE": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-637423178245-us-east-1",
+     "S3Key": "3e3f863d1a256eeab802e42ffd01cf2781cb407b8b8d06ed15062f661d3456ae.zip"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "ValidateCourseLambdaServiceRole9A63FED4",
+      "Arn"
+     ]
+    },
+    "Environment": {
+     "Variables": {
+      "COURSES_TABLE": {
+       "Ref": "CoursesTable3F79D98E"
+      }
+     }
+    },
+    "Handler": "validate-course.handler",
+    "Runtime": "nodejs18.x"
+   },
+   "DependsOn": [
+    "ValidateCourseLambdaServiceRoleDefaultPolicy9B0858C8",
+    "ValidateCourseLambdaServiceRole9A63FED4"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/ValidateCourseLambda/Resource",
+    "aws:asset:path": "asset.3e3f863d1a256eeab802e42ffd01cf2781cb407b8b8d06ed15062f661d3456ae",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ProcessVideoLambdaServiceRoleE7C33A75": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/ProcessVideoLambda/ServiceRole/Resource"
+   }
+  },
+  "ProcessVideoLambdaServiceRoleDefaultPolicyC62D2559": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ProcessedVideosBucketB330264B",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "RawVideosBucketAE61E2E4",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ProcessedVideosBucketB330264B",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "RawVideosBucketAE61E2E4",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "mediaconvert:*",
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ProcessVideoLambdaServiceRoleDefaultPolicyC62D2559",
+    "Roles": [
+     {
+      "Ref": "ProcessVideoLambdaServiceRoleE7C33A75"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/ProcessVideoLambda/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ProcessVideoLambdaB594CC8C": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-637423178245-us-east-1",
+     "S3Key": "3e3f863d1a256eeab802e42ffd01cf2781cb407b8b8d06ed15062f661d3456ae.zip"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "ProcessVideoLambdaServiceRoleE7C33A75",
+      "Arn"
+     ]
+    },
+    "Environment": {
+     "Variables": {
+      "RAW_VIDEOS_BUCKET": {
+       "Ref": "RawVideosBucketAE61E2E4"
+      },
+      "PROCESSED_VIDEOS_BUCKET": {
+       "Ref": "ProcessedVideosBucketB330264B"
+      },
+      "MEDIA_CONVERT_ROLE": "arn:aws:iam::637423178245:role/MediaConvertRole"
+     }
+    },
+    "Handler": "process-video.handler",
+    "Runtime": "nodejs18.x",
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "ProcessVideoLambdaServiceRoleDefaultPolicyC62D2559",
+    "ProcessVideoLambdaServiceRoleE7C33A75"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/ProcessVideoLambda/Resource",
+    "aws:asset:path": "asset.3e3f863d1a256eeab802e42ffd01cf2781cb407b8b8d06ed15062f661d3456ae",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "GenerateThumbnailLambdaServiceRole78859D1B": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/GenerateThumbnailLambda/ServiceRole/Resource"
+   }
+  },
+  "GenerateThumbnailLambdaServiceRoleDefaultPolicyACA38DA1": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CourseMaterialsBucket628AFE73",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "ProcessedVideosBucketB330264B",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "CourseMaterialsBucket628AFE73",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ProcessedVideosBucketB330264B",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "GenerateThumbnailLambdaServiceRoleDefaultPolicyACA38DA1",
+    "Roles": [
+     {
+      "Ref": "GenerateThumbnailLambdaServiceRole78859D1B"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/GenerateThumbnailLambda/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "GenerateThumbnailLambdaE98F6A29": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-637423178245-us-east-1",
+     "S3Key": "3e3f863d1a256eeab802e42ffd01cf2781cb407b8b8d06ed15062f661d3456ae.zip"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "GenerateThumbnailLambdaServiceRole78859D1B",
+      "Arn"
+     ]
+    },
+    "Environment": {
+     "Variables": {
+      "PROCESSED_VIDEOS_BUCKET": {
+       "Ref": "ProcessedVideosBucketB330264B"
+      },
+      "COURSE_MATERIALS_BUCKET": {
+       "Ref": "CourseMaterialsBucket628AFE73"
+      }
+     }
+    },
+    "Handler": "generate-thumbnail.handler",
+    "Runtime": "nodejs18.x",
+    "Timeout": 300
+   },
+   "DependsOn": [
+    "GenerateThumbnailLambdaServiceRoleDefaultPolicyACA38DA1",
+    "GenerateThumbnailLambdaServiceRole78859D1B"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/GenerateThumbnailLambda/Resource",
+    "aws:asset:path": "asset.3e3f863d1a256eeab802e42ffd01cf2781cb407b8b8d06ed15062f661d3456ae",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "CreateCourseLambdaServiceRole64A8447B": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/CreateCourseLambda/ServiceRole/Resource"
+   }
+  },
+  "CreateCourseLambdaServiceRoleDefaultPolicyB56AF7E2": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CoursesTable3F79D98E",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CreateCourseLambdaServiceRoleDefaultPolicyB56AF7E2",
+    "Roles": [
+     {
+      "Ref": "CreateCourseLambdaServiceRole64A8447B"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/CreateCourseLambda/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "CreateCourseLambda9D56EE75": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-637423178245-us-east-1",
+     "S3Key": "3e3f863d1a256eeab802e42ffd01cf2781cb407b8b8d06ed15062f661d3456ae.zip"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "CreateCourseLambdaServiceRole64A8447B",
+      "Arn"
+     ]
+    },
+    "Environment": {
+     "Variables": {
+      "COURSES_TABLE": {
+       "Ref": "CoursesTable3F79D98E"
+      },
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      }
+     }
+    },
+    "Handler": "create-course.handler",
+    "Runtime": "nodejs18.x"
+   },
+   "DependsOn": [
+    "CreateCourseLambdaServiceRoleDefaultPolicyB56AF7E2",
+    "CreateCourseLambdaServiceRole64A8447B"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/CreateCourseLambda/Resource",
+    "aws:asset:path": "asset.3e3f863d1a256eeab802e42ffd01cf2781cb407b8b8d06ed15062f661d3456ae",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "NotificationLambdaServiceRoleA65BA193": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/NotificationLambda/ServiceRole/Resource"
+   }
+  },
+  "NotificationLambdaServiceRoleDefaultPolicy56F80AE2": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:Query",
+        "dynamodb:Scan"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CoursesTable3F79D98E",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchWriteItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "NotificationsTable76DCFC6C",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "ses:SendEmail",
+        "sns:Publish"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "NotificationLambdaServiceRoleDefaultPolicy56F80AE2",
+    "Roles": [
+     {
+      "Ref": "NotificationLambdaServiceRoleA65BA193"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/NotificationLambda/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "NotificationLambda0BF28E71": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-637423178245-us-east-1",
+     "S3Key": "3e3f863d1a256eeab802e42ffd01cf2781cb407b8b8d06ed15062f661d3456ae.zip"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "NotificationLambdaServiceRoleA65BA193",
+      "Arn"
+     ]
+    },
+    "Environment": {
+     "Variables": {
+      "COURSES_TABLE": {
+       "Ref": "CoursesTable3F79D98E"
+      },
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "NOTIFICATIONS_TABLE": {
+       "Ref": "NotificationsTable76DCFC6C"
+      },
+      "FROM_EMAIL": "noreply@skillbridge.com",
+      "FRONTEND_URL": "https://d3md2krnlhzrff.cloudfront.net"
+     }
+    },
+    "Handler": "notification-service.handler",
+    "Runtime": "nodejs18.x"
+   },
+   "DependsOn": [
+    "NotificationLambdaServiceRoleDefaultPolicy56F80AE2",
+    "NotificationLambdaServiceRoleA65BA193"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/NotificationLambda/Resource",
+    "aws:asset:path": "asset.3e3f863d1a256eeab802e42ffd01cf2781cb407b8b8d06ed15062f661d3456ae",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "CourseCreationStateMachineRole95C451F8": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "states.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/CourseCreationStateMachine/Role/Resource"
+   }
+  },
+  "CourseCreationStateMachineRoleDefaultPolicy31ECF0EC": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CreateCourseLambda9D56EE75",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "GenerateThumbnailLambdaE98F6A29",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "NotificationLambda0BF28E71",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "ProcessVideoLambdaB594CC8C",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "ValidateCourseLambda78A817FE",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "CreateCourseLambda9D56EE75",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "GenerateThumbnailLambdaE98F6A29",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "NotificationLambda0BF28E71",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ProcessVideoLambdaB594CC8C",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ValidateCourseLambda78A817FE",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CourseCreationStateMachineRoleDefaultPolicy31ECF0EC",
+    "Roles": [
+     {
+      "Ref": "CourseCreationStateMachineRole95C451F8"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/CourseCreationStateMachine/Role/DefaultPolicy/Resource"
+   }
+  },
+  "CourseCreationStateMachineBEE3002C": {
+   "Type": "AWS::StepFunctions::StateMachine",
+   "Properties": {
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "CourseCreationStateMachineRole95C451F8",
+      "Arn"
+     ]
+    },
+    "DefinitionString": {
+     "Fn::Join": [
+      "",
+      [
+       "{\"Comment\":\"SkillBridge Course Creation Workflow\",\"StartAt\":\"ValidateCourseInput\",\"States\":{\"ValidateCourseInput\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "ValidateCourseLambda78A817FE",
+         "Arn"
+        ]
+       },
+       "\",\"Payload.$\":\"$\"},\"ResultPath\":\"$.validation\",\"Next\":\"IsValidCourse\",\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"Next\":\"HandleValidationError\",\"ResultPath\":\"$.error\"}]},\"IsValidCourse\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.validation.Payload.isValid\",\"BooleanEquals\":true,\"Next\":\"ProcessMediaContent\"}],\"Default\":\"CourseValidationFailed\"},\"ProcessMediaContent\":{\"Type\":\"Parallel\",\"Branches\":[{\"StartAt\":\"ProcessVideos\",\"States\":{\"ProcessVideos\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "ProcessVideoLambdaB594CC8C",
+         "Arn"
+        ]
+       },
+       "\",\"Payload\":{\"courseId.$\":\"$.courseId\",\"videos.$\":\"$.videos\"}},\"End\":true}}},{\"StartAt\":\"GenerateThumbnails\",\"States\":{\"GenerateThumbnails\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "GenerateThumbnailLambdaE98F6A29",
+         "Arn"
+        ]
+       },
+       "\",\"Payload\":{\"courseId.$\":\"$.courseId\",\"images.$\":\"$.images\"}},\"End\":true}}}],\"ResultPath\":\"$.mediaProcessing\",\"Next\":\"CreateCourseRecord\"},\"CreateCourseRecord\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "CreateCourseLambda9D56EE75",
+         "Arn"
+        ]
+       },
+       "\",\"Payload.$\":\"$\"},\"ResultPath\":\"$.courseRecord\",\"Next\":\"SendCreationNotification\"},\"SendCreationNotification\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "NotificationLambda0BF28E71",
+         "Arn"
+        ]
+       },
+       "\",\"Payload\":{\"type\":\"course_created\",\"courseId.$\":\"$.courseId\",\"instructorId.$\":\"$.instructorId\"}},\"ResultPath\":\"$.notification\",\"Next\":\"CourseCreationSuccess\"},\"CourseCreationSuccess\":{\"Type\":\"Pass\",\"Result\":{\"status\":\"success\",\"message\":\"Course created successfully\"},\"End\":true},\"CourseValidationFailed\":{\"Type\":\"Pass\",\"Result\":{\"status\":\"failed\",\"message\":\"Course validation failed\"},\"End\":true},\"HandleValidationError\":{\"Type\":\"Pass\",\"Result\":{\"status\":\"error\",\"message\":\"Validation error occurred\"},\"End\":true}}}"
+      ]
+     ]
+    },
+    "StateMachineName": "skillbridge-course-creation"
+   },
+   "DependsOn": [
+    "CourseCreationStateMachineRoleDefaultPolicy31ECF0EC",
+    "CourseCreationStateMachineRole95C451F8"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/CourseCreationStateMachine/Resource"
+   }
+  },
+  "CourseApprovalStateMachineRole707533F2": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "states.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/CourseApprovalStateMachine/Role/Resource"
+   }
+  },
+  "CourseApprovalStateMachine7876016B": {
+   "Type": "AWS::StepFunctions::StateMachine",
+   "Properties": {
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "CourseApprovalStateMachineRole707533F2",
+      "Arn"
+     ]
+    },
+    "DefinitionString": {
+     "Fn::Join": [
+      "",
+      [
+       "{\"Comment\":\"SkillBridge Course Approval Workflow\",\"StartAt\":\"SubmitForReview\",\"States\":{\"SubmitForReview\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "CreateCourseLambda9D56EE75",
+         "Arn"
+        ]
+       },
+       "\",\"Payload.$\":\"$\"},\"ResultPath\":\"$.submission\",\"Next\":\"AutoQualityCheck\"},\"AutoQualityCheck\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "ValidateCourseLambda78A817FE",
+         "Arn"
+        ]
+       },
+       "\",\"Payload\":{\"courseId.$\":\"$.courseId\",\"content.$\":\"$.content\"}},\"ResultPath\":\"$.qualityCheck\",\"Next\":\"PassesAutoCheck\"},\"PassesAutoCheck\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.qualityCheck.Payload.passed\",\"BooleanEquals\":true,\"Next\":\"WaitForAdminReview\"}],\"Default\":\"AutoReject\"},\"WaitForAdminReview\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke.waitForTaskToken\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "NotificationLambda0BF28E71",
+         "Arn"
+        ]
+       },
+       "\",\"Payload\":{\"courseId.$\":\"$.courseId\",\"taskToken.$\":\"$$.Task.Token\"}},\"ResultPath\":\"$.adminReview\",\"Next\":\"ProcessAdminDecision\"},\"ProcessAdminDecision\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.adminReview.decision\",\"StringEquals\":\"approved\",\"Next\":\"ApproveCourse\"},{\"Variable\":\"$.adminReview.decision\",\"StringEquals\":\"rejected\",\"Next\":\"RejectCourse\"}],\"Default\":\"RequestRevision\"},\"ApproveCourse\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "CreateCourseLambda9D56EE75",
+         "Arn"
+        ]
+       },
+       "\",\"Payload\":{\"courseId.$\":\"$.courseId\",\"adminId.$\":\"$.adminReview.adminId\"}},\"ResultPath\":\"$.approval\",\"Next\":\"PublishCourse\"},\"PublishCourse\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "CreateCourseLambda9D56EE75",
+         "Arn"
+        ]
+       },
+       "\",\"Payload\":{\"courseId.$\":\"$.courseId\"}},\"ResultPath\":\"$.publication\",\"Next\":\"NotifyApproval\"},\"NotifyApproval\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "NotificationLambda0BF28E71",
+         "Arn"
+        ]
+       },
+       "\",\"Payload\":{\"type\":\"course_approved\",\"courseId.$\":\"$.courseId\",\"instructorId.$\":\"$.instructorId\"}},\"Next\":\"ApprovalSuccess\"},\"RejectCourse\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "CreateCourseLambda9D56EE75",
+         "Arn"
+        ]
+       },
+       "\",\"Payload\":{\"courseId.$\":\"$.courseId\",\"reason.$\":\"$.adminReview.reason\"}},\"ResultPath\":\"$.rejection\",\"Next\":\"NotifyRejection\"},\"NotifyRejection\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "NotificationLambda0BF28E71",
+         "Arn"
+        ]
+       },
+       "\",\"Payload\":{\"type\":\"course_rejected\",\"courseId.$\":\"$.courseId\",\"instructorId.$\":\"$.instructorId\",\"reason.$\":\"$.rejection.Payload.reason\"}},\"Next\":\"RejectionComplete\"},\"AutoReject\":{\"Type\":\"Pass\",\"Result\":{\"status\":\"auto_rejected\",\"message\":\"Course failed automated quality checks\"},\"End\":true},\"RequestRevision\":{\"Type\":\"Pass\",\"Result\":{\"status\":\"revision_requested\",\"message\":\"Course requires revision\"},\"End\":true},\"ApprovalSuccess\":{\"Type\":\"Pass\",\"Result\":{\"status\":\"approved\",\"message\":\"Course approved and published\"},\"End\":true},\"RejectionComplete\":{\"Type\":\"Pass\",\"Result\":{\"status\":\"rejected\",\"message\":\"Course rejected\"},\"End\":true}}}"
+      ]
+     ]
+    },
+    "StateMachineName": "skillbridge-course-approval"
+   },
+   "DependsOn": [
+    "CourseApprovalStateMachineRole707533F2"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/CourseApprovalStateMachine/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/02OQW/CMAyFfwv31INy2K5j0m5oU9kduYlhpm2CsANCUf77lBSknd5n6/n5tfD2CssF3qSxbmhG7iHtFO1g8Cb75O4ep+B6SD/Yj2Q+Dr5CNrKGtIl2IC3LB82yQaFsRpx6h5A+o7fKwRfbk7NhnCB1YY6s+h1GtvcyzlRe7FGEVOC9iBGl8+GRILWm0hbtL/ua8n/O2XQkIV4smXq8UzyyPxbfV9RzrK2flmx8cAQnebm2LaxWsFychLm5RK88EXSz/gEINPt1LAEAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "StepFunctionsStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "CourseCreationStateMachineArn": {
+   "Description": "Course Creation State Machine ARN",
+   "Value": {
+    "Ref": "CourseCreationStateMachineBEE3002C"
+   }
+  },
+  "CourseApprovalStateMachineArn": {
+   "Description": "Course Approval State Machine ARN",
+   "Value": {
+    "Ref": "CourseApprovalStateMachine7876016B"
+   }
+  },
+  "RawVideosBucketName": {
+   "Description": "Raw Videos S3 Bucket Name",
+   "Value": {
+    "Ref": "RawVideosBucketAE61E2E4"
+   }
+  },
+  "ProcessedVideosBucketName": {
+   "Description": "Processed Videos S3 Bucket Name",
+   "Value": {
+    "Ref": "ProcessedVideosBucketB330264B"
+   }
+  },
+  "CourseMaterialsBucketName": {
+   "Description": "Course Materials S3 Bucket Name",
+   "Value": {
+    "Ref": "CourseMaterialsBucket628AFE73"
+   }
+  },
+  "CoursesTableName": {
+   "Description": "Courses DynamoDB Table Name",
+   "Value": {
+    "Ref": "CoursesTable3F79D98E"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
