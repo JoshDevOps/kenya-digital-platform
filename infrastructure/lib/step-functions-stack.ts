@@ -12,41 +12,24 @@ export class StepFunctionsStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // DynamoDB Tables
-    const coursesTable = new dynamodb.Table(this, 'CoursesTable', {
-      tableName: 'skillbridge-courses',
-      partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
-      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-      removalPolicy: cdk.RemovalPolicy.RETAIN
-    });
-
-    const usersTable = new dynamodb.Table(this, 'UsersTable', {
-      tableName: 'skillbridge-users',
-      partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
-      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-      removalPolicy: cdk.RemovalPolicy.RETAIN
-    });
-
+    // Import existing DynamoDB Tables from SkillBridgeStack
+    const coursesTable = dynamodb.Table.fromTableName(this, 'CoursesTable', 'skillbridge-courses');
+    const usersTable = dynamodb.Table.fromTableName(this, 'UsersTable', 'skillbridge-users');
+    
+    // Create notifications table (new for Step Functions)
     const notificationsTable = new dynamodb.Table(this, 'NotificationsTable', {
-      tableName: 'skillbridge-notifications',
+      tableName: 'skillbridge-step-functions-notifications',
       partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
       removalPolicy: cdk.RemovalPolicy.RETAIN
     });
 
-    // S3 Buckets
-    const rawVideosBucket = new s3.Bucket(this, 'RawVideosBucket', {
-      bucketName: 'skillbridge-raw-videos',
-      removalPolicy: cdk.RemovalPolicy.RETAIN,
-      cors: [{
-        allowedMethods: [s3.HttpMethods.GET, s3.HttpMethods.PUT, s3.HttpMethods.POST],
-        allowedOrigins: ['*'],
-        allowedHeaders: ['*']
-      }]
-    });
-
+    // Import existing uploads bucket and create video-specific buckets
+    const uploadsBucket = s3.Bucket.fromBucketName(this, 'UploadsBucket', `skillbridge-uploads-${this.account}`);
+    
+    // Create video processing buckets with unique names
     const processedVideosBucket = new s3.Bucket(this, 'ProcessedVideosBucket', {
-      bucketName: 'skillbridge-processed-videos',
+      bucketName: `skillbridge-processed-videos-${this.account}`,
       removalPolicy: cdk.RemovalPolicy.RETAIN,
       cors: [{
         allowedMethods: [s3.HttpMethods.GET],
@@ -56,7 +39,7 @@ export class StepFunctionsStack extends cdk.Stack {
     });
 
     const courseMaterialsBucket = new s3.Bucket(this, 'CourseMaterialsBucket', {
-      bucketName: 'skillbridge-course-materials',
+      bucketName: `skillbridge-course-materials-${this.account}`,
       removalPolicy: cdk.RemovalPolicy.RETAIN,
       cors: [{
         allowedMethods: [s3.HttpMethods.GET, s3.HttpMethods.PUT],
@@ -81,7 +64,7 @@ export class StepFunctionsStack extends cdk.Stack {
       code: lambda.Code.fromAsset(path.join(__dirname, '../lambdas')),
       timeout: cdk.Duration.minutes(15),
       environment: {
-        RAW_VIDEOS_BUCKET: rawVideosBucket.bucketName,
+        RAW_VIDEOS_BUCKET: uploadsBucket.bucketName,
         PROCESSED_VIDEOS_BUCKET: processedVideosBucket.bucketName,
         MEDIA_CONVERT_ROLE: 'arn:aws:iam::' + this.account + ':role/MediaConvertRole'
       }
@@ -128,7 +111,7 @@ export class StepFunctionsStack extends cdk.Stack {
     usersTable.grantReadWriteData(createCourseLambda);
     usersTable.grantReadData(notificationLambda);
     notificationsTable.grantWriteData(notificationLambda);
-    rawVideosBucket.grantReadWrite(processVideoLambda);
+    uploadsBucket.grantReadWrite(processVideoLambda);
     processedVideosBucket.grantReadWrite(processVideoLambda);
     processedVideosBucket.grantReadWrite(generateThumbnailLambda);
     courseMaterialsBucket.grantReadWrite(generateThumbnailLambda);
@@ -205,9 +188,9 @@ export class StepFunctionsStack extends cdk.Stack {
       description: 'Course Approval State Machine ARN'
     });
 
-    new cdk.CfnOutput(this, 'RawVideosBucketName', {
-      value: rawVideosBucket.bucketName,
-      description: 'Raw Videos S3 Bucket Name'
+    new cdk.CfnOutput(this, 'UploadsBucketName', {
+      value: uploadsBucket.bucketName,
+      description: 'Uploads S3 Bucket Name (Raw Videos)'
     });
 
     new cdk.CfnOutput(this, 'ProcessedVideosBucketName', {
@@ -223,6 +206,11 @@ export class StepFunctionsStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'CoursesTableName', {
       value: coursesTable.tableName,
       description: 'Courses DynamoDB Table Name'
+    });
+
+    new cdk.CfnOutput(this, 'NotificationsTableName', {
+      value: notificationsTable.tableName,
+      description: 'Notifications DynamoDB Table Name'
     });
   }
 }

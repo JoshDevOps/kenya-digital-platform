@@ -1646,90 +1646,16 @@
           "CoursesTable": {
             "id": "CoursesTable",
             "path": "StepFunctionsStack/CoursesTable",
-            "children": {
-              "Resource": {
-                "id": "Resource",
-                "path": "StepFunctionsStack/CoursesTable/Resource",
-                "attributes": {
-                  "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
-                  "aws:cdk:cloudformation:props": {
-                    "keySchema": [
-                      {
-                        "attributeName": "id",
-                        "keyType": "HASH"
-                      }
-                    ],
-                    "attributeDefinitions": [
-                      {
-                        "attributeName": "id",
-                        "attributeType": "S"
-                      }
-                    ],
-                    "billingMode": "PAY_PER_REQUEST",
-                    "tableName": "skillbridge-courses"
-                  }
-                },
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.aws_dynamodb.CfnTable",
-                  "version": "2.87.0"
-                }
-              },
-              "ScalingRole": {
-                "id": "ScalingRole",
-                "path": "StepFunctionsStack/CoursesTable/ScalingRole",
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.Resource",
-                  "version": "2.87.0"
-                }
-              }
-            },
             "constructInfo": {
-              "fqn": "aws-cdk-lib.aws_dynamodb.Table",
+              "fqn": "aws-cdk-lib.Resource",
               "version": "2.87.0"
             }
           },
           "UsersTable": {
             "id": "UsersTable",
             "path": "StepFunctionsStack/UsersTable",
-            "children": {
-              "Resource": {
-                "id": "Resource",
-                "path": "StepFunctionsStack/UsersTable/Resource",
-                "attributes": {
-                  "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
-                  "aws:cdk:cloudformation:props": {
-                    "keySchema": [
-                      {
-                        "attributeName": "id",
-                        "keyType": "HASH"
-                      }
-                    ],
-                    "attributeDefinitions": [
-                      {
-                        "attributeName": "id",
-                        "attributeType": "S"
-                      }
-                    ],
-                    "billingMode": "PAY_PER_REQUEST",
-                    "tableName": "skillbridge-users"
-                  }
-                },
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.aws_dynamodb.CfnTable",
-                  "version": "2.87.0"
-                }
-              },
-              "ScalingRole": {
-                "id": "ScalingRole",
-                "path": "StepFunctionsStack/UsersTable/ScalingRole",
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.Resource",
-                  "version": "2.87.0"
-                }
-              }
-            },
             "constructInfo": {
-              "fqn": "aws-cdk-lib.aws_dynamodb.Table",
+              "fqn": "aws-cdk-lib.Resource",
               "version": "2.87.0"
             }
           },
@@ -1756,7 +1682,7 @@
                       }
                     ],
                     "billingMode": "PAY_PER_REQUEST",
-                    "tableName": "skillbridge-notifications"
+                    "tableName": "skillbridge-step-functions-notifications"
                   }
                 },
                 "constructInfo": {
@@ -1778,44 +1704,11 @@
               "version": "2.87.0"
             }
           },
-          "RawVideosBucket": {
-            "id": "RawVideosBucket",
-            "path": "StepFunctionsStack/RawVideosBucket",
-            "children": {
-              "Resource": {
-                "id": "Resource",
-                "path": "StepFunctionsStack/RawVideosBucket/Resource",
-                "attributes": {
-                  "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
-                  "aws:cdk:cloudformation:props": {
-                    "bucketName": "skillbridge-raw-videos",
-                    "corsConfiguration": {
-                      "corsRules": [
-                        {
-                          "allowedHeaders": [
-                            "*"
-                          ],
-                          "allowedMethods": [
-                            "GET",
-                            "PUT",
-                            "POST"
-                          ],
-                          "allowedOrigins": [
-                            "*"
-                          ]
-                        }
-                      ]
-                    }
-                  }
-                },
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.aws_s3.CfnBucket",
-                  "version": "2.87.0"
-                }
-              }
-            },
+          "UploadsBucket": {
+            "id": "UploadsBucket",
+            "path": "StepFunctionsStack/UploadsBucket",
             "constructInfo": {
-              "fqn": "aws-cdk-lib.aws_s3.Bucket",
+              "fqn": "aws-cdk-lib.aws_s3.BucketBase",
               "version": "2.87.0"
             }
           },
@@ -1829,7 +1722,7 @@
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
                   "aws:cdk:cloudformation:props": {
-                    "bucketName": "skillbridge-processed-videos",
+                    "bucketName": "skillbridge-processed-videos-637423178245",
                     "corsConfiguration": {
                       "corsRules": [
                         {
@@ -1868,7 +1761,7 @@
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
                   "aws:cdk:cloudformation:props": {
-                    "bucketName": "skillbridge-course-materials",
+                    "bucketName": "skillbridge-course-materials-637423178245",
                     "corsConfiguration": {
                       "corsRules": [
                         {
@@ -1982,12 +1875,7 @@
                                   ],
                                   "Effect": "Allow",
                                   "Resource": [
-                                    {
-                                      "Fn::GetAtt": [
-                                        "CoursesTable3F79D98E",
-                                        "Arn"
-                                      ]
-                                    },
+                                    "arn:aws:dynamodb:us-east-1:637423178245:table/skillbridge-courses",
                                     {
                                       "Ref": "AWS::NoValue"
                                     }
@@ -2065,9 +1953,7 @@
                     },
                     "environment": {
                       "variables": {
-                        "COURSES_TABLE": {
-                          "Ref": "CoursesTable3F79D98E"
-                        }
+                        "COURSES_TABLE": "skillbridge-courses"
                       }
                     },
                     "handler": "validate-course.handler",
@@ -2167,15 +2053,11 @@
                                   ],
                                   "Effect": "Allow",
                                   "Resource": [
+                                    "arn:aws:s3:::skillbridge-uploads-637423178245",
+                                    "arn:aws:s3:::skillbridge-uploads-637423178245/*",
                                     {
                                       "Fn::GetAtt": [
                                         "ProcessedVideosBucketB330264B",
-                                        "Arn"
-                                      ]
-                                    },
-                                    {
-                                      "Fn::GetAtt": [
-                                        "RawVideosBucketAE61E2E4",
                                         "Arn"
                                       ]
                                     },
@@ -2186,20 +2068,6 @@
                                           {
                                             "Fn::GetAtt": [
                                               "ProcessedVideosBucketB330264B",
-                                              "Arn"
-                                            ]
-                                          },
-                                          "/*"
-                                        ]
-                                      ]
-                                    },
-                                    {
-                                      "Fn::Join": [
-                                        "",
-                                        [
-                                          {
-                                            "Fn::GetAtt": [
-                                              "RawVideosBucketAE61E2E4",
                                               "Arn"
                                             ]
                                           },
@@ -2286,9 +2154,7 @@
                     },
                     "environment": {
                       "variables": {
-                        "RAW_VIDEOS_BUCKET": {
-                          "Ref": "RawVideosBucketAE61E2E4"
-                        },
+                        "RAW_VIDEOS_BUCKET": "skillbridge-uploads-637423178245",
                         "PROCESSED_VIDEOS_BUCKET": {
                           "Ref": "ProcessedVideosBucketB330264B"
                         },
@@ -2615,18 +2481,8 @@
                                   ],
                                   "Effect": "Allow",
                                   "Resource": [
-                                    {
-                                      "Fn::GetAtt": [
-                                        "CoursesTable3F79D98E",
-                                        "Arn"
-                                      ]
-                                    },
-                                    {
-                                      "Fn::GetAtt": [
-                                        "UsersTable9725E9C8",
-                                        "Arn"
-                                      ]
-                                    },
+                                    "arn:aws:dynamodb:us-east-1:637423178245:table/skillbridge-courses",
+                                    "arn:aws:dynamodb:us-east-1:637423178245:table/skillbridge-users",
                                     {
                                       "Ref": "AWS::NoValue"
                                     }
@@ -2704,12 +2560,8 @@
                     },
                     "environment": {
                       "variables": {
-                        "COURSES_TABLE": {
-                          "Ref": "CoursesTable3F79D98E"
-                        },
-                        "USERS_TABLE": {
-                          "Ref": "UsersTable9725E9C8"
-                        }
+                        "COURSES_TABLE": "skillbridge-courses",
+                        "USERS_TABLE": "skillbridge-users"
                       }
                     },
                     "handler": "create-course.handler",
@@ -2807,18 +2659,8 @@
                                   ],
                                   "Effect": "Allow",
                                   "Resource": [
-                                    {
-                                      "Fn::GetAtt": [
-                                        "CoursesTable3F79D98E",
-                                        "Arn"
-                                      ]
-                                    },
-                                    {
-                                      "Fn::GetAtt": [
-                                        "UsersTable9725E9C8",
-                                        "Arn"
-                                      ]
-                                    },
+                                    "arn:aws:dynamodb:us-east-1:637423178245:table/skillbridge-courses",
+                                    "arn:aws:dynamodb:us-east-1:637423178245:table/skillbridge-users",
                                     {
                                       "Ref": "AWS::NoValue"
                                     }
@@ -2925,12 +2767,8 @@
                     },
                     "environment": {
                       "variables": {
-                        "COURSES_TABLE": {
-                          "Ref": "CoursesTable3F79D98E"
-                        },
-                        "USERS_TABLE": {
-                          "Ref": "UsersTable9725E9C8"
-                        },
+                        "COURSES_TABLE": "skillbridge-courses",
+                        "USERS_TABLE": "skillbridge-users",
                         "NOTIFICATIONS_TABLE": {
                           "Ref": "NotificationsTable76DCFC6C"
                         },
@@ -3362,9 +3200,9 @@
               "version": "2.87.0"
             }
           },
-          "RawVideosBucketName": {
-            "id": "RawVideosBucketName",
-            "path": "StepFunctionsStack/RawVideosBucketName",
+          "UploadsBucketName": {
+            "id": "UploadsBucketName",
+            "path": "StepFunctionsStack/UploadsBucketName",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnOutput",
               "version": "2.87.0"
@@ -3389,6 +3227,14 @@
           "CoursesTableName": {
             "id": "CoursesTableName",
             "path": "StepFunctionsStack/CoursesTableName",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.87.0"
+            }
+          },
+          "NotificationsTableName": {
+            "id": "NotificationsTableName",
+            "path": "StepFunctionsStack/NotificationsTableName",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnOutput",
               "version": "2.87.0"

@@ -324,7 +324,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::637423178245:role/cdk-hnb659fds-deploy-role-637423178245-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::637423178245:role/cdk-hnb659fds-cfn-exec-role-637423178245-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-637423178245-us-east-1/11ad912f9fa4883dc78ca9848450e373153bc193bf88d6214f116d97932b8650.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-637423178245-us-east-1/32782f49771488b801216eb6d3272fafbeaf94e9774602b2b124242888890183.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -340,34 +340,6 @@
         "StepFunctionsStack.assets"
       ],
       "metadata": {
-        "/StepFunctionsStack/CoursesTable": [
-          {
-            "type": "aws:cdk:hasPhysicalName",
-            "data": {
-              "Ref": "CoursesTable3F79D98E"
-            }
-          }
-        ],
-        "/StepFunctionsStack/CoursesTable/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "CoursesTable3F79D98E"
-          }
-        ],
-        "/StepFunctionsStack/UsersTable": [
-          {
-            "type": "aws:cdk:hasPhysicalName",
-            "data": {
-              "Ref": "UsersTable9725E9C8"
-            }
-          }
-        ],
-        "/StepFunctionsStack/UsersTable/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "UsersTable9725E9C8"
-          }
-        ],
         "/StepFunctionsStack/NotificationsTable": [
           {
             "type": "aws:cdk:hasPhysicalName",
@@ -380,12 +352,6 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "NotificationsTable76DCFC6C"
-          }
-        ],
-        "/StepFunctionsStack/RawVideosBucket/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "RawVideosBucketAE61E2E4"
           }
         ],
         "/StepFunctionsStack/ProcessedVideosBucket/Resource": [
@@ -532,10 +498,10 @@
             "data": "CourseApprovalStateMachineArn"
           }
         ],
-        "/StepFunctionsStack/RawVideosBucketName": [
+        "/StepFunctionsStack/UploadsBucketName": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "RawVideosBucketName"
+            "data": "UploadsBucketName"
           }
         ],
         "/StepFunctionsStack/ProcessedVideosBucketName": [
@@ -554,6 +520,12 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "CoursesTableName"
+          }
+        ],
+        "/StepFunctionsStack/NotificationsTableName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NotificationsTableName"
           }
         ],
         "/StepFunctionsStack/CDKMetadata/Default": [
